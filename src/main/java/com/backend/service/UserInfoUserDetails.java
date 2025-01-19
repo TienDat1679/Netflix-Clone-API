@@ -20,12 +20,12 @@ import lombok.NoArgsConstructor;
 public class UserInfoUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
-	private String name;
+	private String email;
 	private String password;
 	private List<GrantedAuthority> authorities;
 
 	public UserInfoUserDetails(UserInfo userInfo) {
-		name = userInfo.getName();
+		email = userInfo.getEmail();
 		password = userInfo.getPassword();
 		authorities = Arrays.stream(userInfo.getRoles().split(","))
 				.map(SimpleGrantedAuthority::new)
@@ -44,7 +44,7 @@ public class UserInfoUserDetails implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return name;
+		return email;
 	}
 
 	@Override

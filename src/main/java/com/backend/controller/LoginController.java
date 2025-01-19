@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.model.AuthRequest;
 import com.backend.model.AuthResponse;
+import com.backend.repository.UserInfoRepository;
 import com.backend.util.JwtUtil;
 
 @RestController
@@ -29,13 +30,20 @@ public class LoginController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private UserInfoRepository userRepository;
+
     @PostMapping
     public ResponseEntity<?> authenticate(@RequestBody AuthRequest authRequest) {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
             
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
+            if (userRepository.findEnabledByEmail(authRequest.getEmail()) == 0) {
+                return ResponseEntity.status(401).body("Tài khoản chưa được kích hoạt");
+            }
+
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getEmail());
             final String token = jwtUtil.generateToken(userDetails.getUsername());
             return ResponseEntity.ok(new AuthResponse(token));
         } catch (AuthenticationException e) {

@@ -82,6 +82,28 @@ public class RegisterController {
         }
     }
 
+    @GetMapping("/resend-otp/{email}")
+    public ResponseEntity<?> resendOtp(@PathVariable String email) {
+        UserInfo user = userInfoRepository.findByEmail(email).orElse(null);
+
+        if (user != null) {
+            int otp = otpGenerator();
+            MailBody mailBody = MailBody.builder()
+				.to(email)
+				.text("This is the OTP for verify your Account request: " + otp)
+				.subject("OTP for Verify Account request")
+				.build();
+            emailService.sendSimpleMessage(mailBody);
+
+            user.setOtp(otp);
+            userInfoRepository.save(user);
+            return ResponseEntity.ok("Đã gửi lại mã OTP vào email của bạn !");
+        } else {
+            return ResponseEntity.badRequest().body("Email không tồn tại.");
+        }
+    }
+
+
     private Integer otpGenerator() {
         Random random = new Random();
         return random.nextInt(100_000, 999_999);

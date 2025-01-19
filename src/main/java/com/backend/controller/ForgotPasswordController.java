@@ -24,7 +24,7 @@ import com.backend.repository.UserInfoRepository;
 import com.backend.service.EmailService;
 
 @RestController
-@RequestMapping("/forgotPassword")
+@RequestMapping("/api/forgotPassword")
 public class ForgotPasswordController {
 
 	private final UserInfoRepository userRepository;

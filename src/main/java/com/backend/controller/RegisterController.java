@@ -4,11 +4,6 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,27 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.entity.UserInfo;
-import com.backend.model.AuthRequest;
-import com.backend.model.AuthResponse;
 import com.backend.model.MailBody;
 import com.backend.model.RegisterRequest;
 import com.backend.repository.UserInfoRepository;
 import com.backend.service.EmailService;
 import com.backend.service.UserService;
-import com.backend.util.JwtUtil;
 
 @RestController
-@RequestMapping("/api/auth")
-public class AuthController {
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
+@RequestMapping("/api/register")
+public class RegisterController {
 
     @Autowired
     private UserService userService;
@@ -52,21 +35,7 @@ public class AuthController {
     @Autowired
     private UserInfoRepository userInfoRepository;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody AuthRequest authRequest) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-            
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
-            final String token = jwtUtil.generateToken(userDetails.getUsername());
-            return ResponseEntity.ok(new AuthResponse(token));
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(401).body("Tài khoản hoặc mật khẩu không hợp lệ");
-        }
-    }
-
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
         try {
             // Kiểm tra xem user đã tồn tại chưa
@@ -99,7 +68,7 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/register/verify/{otp}/{email}")
+    @GetMapping("/verify/{otp}/{email}")
     public ResponseEntity<?> verifyUser(@PathVariable Integer otp, @PathVariable String email) {
         UserInfo user = userInfoRepository.findByEmail(email).orElse(null);
 

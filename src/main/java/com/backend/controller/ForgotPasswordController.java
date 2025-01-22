@@ -2,7 +2,6 @@ package com.backend.controller;
 
 import java.time.Instant;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Random;
 
 import org.springframework.http.HttpStatus;
@@ -42,9 +41,12 @@ public class ForgotPasswordController {
 	// send mail for email verification
 	@PostMapping("/verifyMail/{email}")
 	public ResponseEntity<String> verifyEmail(@PathVariable String email) {
-		UserInfo user = userRepository.findByEmail(email)
-				.orElseThrow(() -> new UsernameNotFoundException("Vui lòng cung cấp một email hợp lệ!"));
+		UserInfo user = userRepository.findByEmail(email).orElse(null);
 	
+		if (user == null) {
+			return ResponseEntity.badRequest().body("Email không tồn tại.");
+		}
+
 		int otp = otpGenerator();
 		MailBody mailBody = MailBody.builder()
 				.to(email)
@@ -83,16 +85,16 @@ public class ForgotPasswordController {
 		} catch (UsernameNotFoundException e) {
 			return new ResponseEntity<>("Vui lòng cung cấp một email hợp lệ !", HttpStatus.EXPECTATION_FAILED);
 		} catch (RuntimeException e) {
-			return new ResponseEntity<>("Mã OTP không hợp lệ !", HttpStatus.EXPECTATION_FAILED);
+			return new ResponseEntity<>("Mã OTP không hợp lệ !", HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@PostMapping("/changePassword/{email}")
 	public ResponseEntity<String> changePasswordHandler(@RequestBody ChangePassword changePassword,
 														@PathVariable String email) {
-		if (!Objects.equals(changePassword.password(), changePassword.repeatPassword())) {
-			return new ResponseEntity<>("Hãy nhập lại mật khẩu !", HttpStatus.EXPECTATION_FAILED);
-		}
+		// if (!Objects.equals(changePassword.password(), changePassword.repeatPassword())) {
+		// 	return new ResponseEntity<>("Hãy nhập lại mật khẩu !", HttpStatus.EXPECTATION_FAILED);
+		// }
 		
 		String encodedPassword = passwordEncoder.encode(changePassword.password());
 		userRepository.updatePassword(email, encodedPassword);

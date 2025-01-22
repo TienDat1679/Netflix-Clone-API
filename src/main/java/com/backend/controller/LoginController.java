@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.model.AuthRequest;
 import com.backend.model.AuthResponse;
+import com.backend.model.ErrorResponse;
 import com.backend.repository.UserInfoRepository;
 import com.backend.util.JwtUtil;
 
@@ -40,14 +41,14 @@ public class LoginController {
                     new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
             
             if (userRepository.findEnabledByEmail(authRequest.getEmail()) == 0) {
-                return ResponseEntity.status(401).body("Tài khoản chưa được kích hoạt");
+                return ResponseEntity.status(401).body(new ErrorResponse("Tài khoản chưa được kích hoạt"));
             }
 
             final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getEmail());
             final String token = jwtUtil.generateToken(userDetails.getUsername());
             return ResponseEntity.ok(new AuthResponse(token));
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(401).body("Tài khoản hoặc mật khẩu không hợp lệ");
+            return ResponseEntity.status(417).body(new ErrorResponse("Tài khoản hoặc mật khẩu không hợp lệ"));
         }
     }
 }

@@ -90,7 +90,7 @@ public class ForgotPasswordController {
 	}
 	
 	@PostMapping("/changePassword/{email}")
-	public ResponseEntity<String> changePasswordHandler(@RequestBody ChangePassword changePassword,
+	public ResponseEntity<?> changePasswordHandler(@RequestBody ChangePassword changePassword,
 														@PathVariable String email) {
 		// if (!Objects.equals(changePassword.password(), changePassword.repeatPassword())) {
 		// 	return new ResponseEntity<>("Hãy nhập lại mật khẩu !", HttpStatus.EXPECTATION_FAILED);
@@ -98,6 +98,13 @@ public class ForgotPasswordController {
 		
 		String encodedPassword = passwordEncoder.encode(changePassword.password());
 		userRepository.updatePassword(email, encodedPassword);
+		
+		// Xoa fp
+		UserInfo user = userRepository.findByEmail(email).orElse(null);
+		ForgotPassword fp = forgotPasswordRepository.findByUser(user).orElse(null);
+		if (fp != null) {
+			forgotPasswordRepository.deleteById(fp.getFpid());
+		}
 		
 		return ResponseEntity.ok("Mật khẩu đổi thành công !");
 	}

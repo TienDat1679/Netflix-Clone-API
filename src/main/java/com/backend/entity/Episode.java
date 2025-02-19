@@ -1,10 +1,7 @@
 package com.backend.entity;
 
-import java.util.Date;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -21,20 +18,18 @@ import lombok.NoArgsConstructor;
 public class Episode {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private int episodeNumber;
     private String name;
+    @Column(columnDefinition = "TEXT")
     private String overview;
-    private int duration;
-    private String videoUrl;
-    private Date airDate;
+    private String airDate;
     private int seasonNumber;
     private int runtime;
     private String stillPath;
 
     @ManyToOne
-    @JoinColumn(name = "series_id", nullable = false)
+    @JoinColumn(name = "series_id")
     private TVSerie tvSerie;
 }

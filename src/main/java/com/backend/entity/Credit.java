@@ -26,4 +26,7 @@ public class Credit {
 
     @ManyToMany(mappedBy = "credits")
     private List<Movie> movies;
+
+    @ManyToMany(mappedBy = "credits")
+    private List<TVSerie> series;
 }

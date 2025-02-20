@@ -1,10 +1,7 @@
 package com.backend.entity;
 
-import java.util.Date;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -21,16 +18,19 @@ import lombok.NoArgsConstructor;
 public class Trailer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long trailerId;
+    private String id;
 
-    private String title;
-    private String thumbnailUrl;
-    private String videoUrl;
-    private Date releaseDate;
-    private int duration;
+    @Column(name = "video_key")
+    private String key;
+    private String name;
+    private String site;
+    private String type;
 
     @ManyToOne
-    @JoinColumn(name = "movie_id", nullable = false)
+    @JoinColumn(name = "movie_id")
     private Movie movie;
+
+    @ManyToOne
+    @JoinColumn(name = "series_id")
+    private TVSerie tvSerie;
 }

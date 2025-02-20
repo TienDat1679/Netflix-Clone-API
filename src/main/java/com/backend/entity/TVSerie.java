@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -36,8 +35,12 @@ public class TVSerie {
     private boolean adult;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "tvSerie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "tvSerie")
     private List<Episode> episodes;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "tvSerie")
+    private List<Trailer> trailers;
 
     @JsonIgnore
     @ManyToMany

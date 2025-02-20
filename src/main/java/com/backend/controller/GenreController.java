@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.dto.GenreDTO;
 import com.backend.entity.Genre;
-import com.backend.model.GenreDTO;
 import com.backend.repository.GenreRepository;
 import com.backend.service.GenreService;
 

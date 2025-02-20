@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.dto.ChangePassword;
+import com.backend.dto.MailBody;
 import com.backend.entity.ForgotPassword;
 import com.backend.entity.UserInfo;
-import com.backend.model.ChangePassword;
-import com.backend.model.MailBody;
 import com.backend.repository.ForgotPasswordRepository;
 import com.backend.repository.UserInfoRepository;
 import com.backend.service.EmailService;

@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.model.AuthRequest;
-import com.backend.model.AuthResponse;
-import com.backend.model.ErrorResponse;
+import com.backend.dto.AuthRequest;
+import com.backend.dto.AuthResponse;
+import com.backend.dto.ErrorResponse;
 import com.backend.repository.UserInfoRepository;
 import com.backend.util.JwtUtil;
 

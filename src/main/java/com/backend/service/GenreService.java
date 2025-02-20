@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.backend.dto.GenreDTO;
 import com.backend.entity.Genre;
-import com.backend.model.GenreDTO;
 import com.backend.repository.GenreRepository;
 
 @Service

@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.dto.MailBody;
+import com.backend.dto.RegisterRequest;
 import com.backend.entity.UserInfo;
-import com.backend.model.MailBody;
-import com.backend.model.RegisterRequest;
 import com.backend.repository.UserInfoRepository;
 import com.backend.service.EmailService;
 import com.backend.service.UserService;

@@ -2,6 +2,8 @@ package com.backend.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
@@ -23,6 +25,12 @@ public class Genre {
     private String name;
     private String description;
 
+    //@JsonIgnore
     @ManyToMany(mappedBy = "genres")
     private List<Movie> movies;
+
+    //@JsonIgnore
+    @ManyToMany(mappedBy = "genres")
+    private List<TVSerie> series;
+
 }

@@ -3,6 +3,8 @@ package com.backend.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -38,10 +40,12 @@ public class Movie {
     @OneToMany(mappedBy = "movie")
     private List<Trailer> trailers;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "movie_genres", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "movie_credits", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "credit_id"))
     private List<Credit> credits;

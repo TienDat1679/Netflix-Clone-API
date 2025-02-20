@@ -2,6 +2,8 @@ package com.backend.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,13 +35,16 @@ public class TVSerie {
     private String backdropPath;
     private boolean adult;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "tvSerie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Episode> episodes;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "tv_genres", joinColumns = @JoinColumn(name = "series_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "serie_credits", joinColumns = @JoinColumn(name = "series_id"), inverseJoinColumns = @JoinColumn(name = "credit_id"))
     private List<Credit> credits;

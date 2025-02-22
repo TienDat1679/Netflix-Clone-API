@@ -25,11 +25,11 @@ public class Genre {
     private String name;
     private String description;
 
-    //@JsonIgnore
+    @JsonIgnore
     @ManyToMany(mappedBy = "genres")
     private List<Movie> movies;
 
-    //@JsonIgnore
+    @JsonIgnore
     @ManyToMany(mappedBy = "genres")
     private List<TVSerie> series;
 

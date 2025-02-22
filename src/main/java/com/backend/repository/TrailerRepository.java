@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.backend.entity.Trailer;
 
 @Repository
-public interface TrailerRepository extends JpaRepository<Trailer, Long> {
+public interface TrailerRepository extends JpaRepository<Trailer, String> {
 
 }

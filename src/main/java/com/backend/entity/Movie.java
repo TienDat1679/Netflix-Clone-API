@@ -37,6 +37,7 @@ public class Movie {
     private boolean video;
     private int runtime;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "movie")
     private List<Trailer> trailers;
 

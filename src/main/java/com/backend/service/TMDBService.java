@@ -62,7 +62,7 @@ public class TMDBService {
         try {
             // Gọi API để lấy danh sách phim phổ biến
             //String url = apiUrl + "/movie/popular?api_key=" + apiKey + "&language=vi-VN&page=1";
-            String url = apiUrl + "/trending/movie/week?api_key=" + apiKey + "&language=vi-VN&page=2";
+            String url = apiUrl + "/trending/movie/week?api_key=" + apiKey + "&language=vi-VN&page=3";
             String response = restTemplate.getForObject(url, String.class);
 
             // Chuyển đổi JSON thành danh sách phim
@@ -189,7 +189,7 @@ public class TMDBService {
     public void fetchAndSaveTVSeries() {
         try {
             //String url = apiUrl + "/tv/popular?api_key=" + apiKey + "&language=vi-VN&page=1";
-            String url = apiUrl + "/trending/tv/week?api_key=" + apiKey + "&language=vi-VN&page=2";
+            String url = apiUrl + "/trending/tv/week?api_key=" + apiKey + "&language=vi-VN&page=1";
             String response = restTemplate.getForObject(url, String.class);
             JsonNode root = objectMapper.readTree(response);
             JsonNode results = root.get("results");

@@ -2,6 +2,7 @@ package com.backend.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
@@ -24,9 +25,11 @@ public class Credit {
     private String knownForDepartment;
     private String profilePath;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "credits")
     private List<Movie> movies;
 
     @ManyToMany(mappedBy = "credits")
+    @JsonIgnore
     private List<TVSerie> series;
 }

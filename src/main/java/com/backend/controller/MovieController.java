@@ -1,6 +1,7 @@
 package com.backend.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,7 @@ public class MovieController {
    
    @Autowired
    private GenreRepository genreRepository;
-  
-   
+
    @Autowired
    private GenreService genreService;
    
@@ -40,8 +40,17 @@ public class MovieController {
    }
 
    @GetMapping("")
-   public ResponseEntity<?>getMovies(@RequestParam("title") String title){
-	   return ResponseEntity.ok(null);
+   public ResponseEntity<?> getAllMovies() {
+      List<Movie> movies = movieRepo.findAll();
+      return ResponseEntity.ok(movies);
    }
+
+   @GetMapping("/search")
+   public ResponseEntity<?> searchMovies(@RequestParam("id") Long id) {
+      Optional<Movie> movie = movieRepo.findById(id);
+      return ResponseEntity.ok(movie);
+   }
+
+
 
 }

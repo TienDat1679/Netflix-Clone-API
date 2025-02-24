@@ -1,5 +1,6 @@
 package com.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -27,10 +28,12 @@ public class Trailer {
     private String type;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
     @ManyToOne
     @JoinColumn(name = "series_id")
+    @JsonIgnore
     private TVSerie tvSerie;
 }

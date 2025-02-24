@@ -37,16 +37,16 @@ public class Movie {
     private boolean video;
     private int runtime;
 
-    @JsonIgnore
+//    @JsonIgnore
     @OneToMany(mappedBy = "movie")
     private List<Trailer> trailers;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "movie_genres", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "movie_credits", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "credit_id"))
     private List<Credit> credits;

@@ -34,20 +34,20 @@ public class TVSerie {
     private String backdropPath;
     private boolean adult;
 
-    @JsonIgnore
+//    @JsonIgnore
     @OneToMany(mappedBy = "tvSerie")
     private List<Episode> episodes;
 
-    @JsonIgnore
+//    @JsonIgnore
     @OneToMany(mappedBy = "tvSerie")
     private List<Trailer> trailers;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "tv_genres", joinColumns = @JoinColumn(name = "series_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "serie_credits", joinColumns = @JoinColumn(name = "series_id"), inverseJoinColumns = @JoinColumn(name = "credit_id"))
     private List<Credit> credits;

@@ -1,5 +1,6 @@
 package com.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -29,7 +30,9 @@ public class Episode {
     private int runtime;
     private String stillPath;
 
+
     @ManyToOne
     @JoinColumn(name = "series_id")
+    @JsonIgnore
     private TVSerie tvSerie;
 }

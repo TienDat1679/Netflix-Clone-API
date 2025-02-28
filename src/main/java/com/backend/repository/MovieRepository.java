@@ -22,4 +22,12 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> searchMoviesByTitle(@Param("title") String title);
 
 
+
+    @Query("SELECT DISTINCT m FROM Movie m " +
+                "JOIN m.genres g " +
+                "WHERE g.id IN (SELECT g2.id FROM Movie m2 JOIN m2.genres g2 WHERE m2.id = :movieId) " +
+                "AND m.id <> :movieId")
+    List<Movie> findMoviesWithSameGenres(@Param("movieId") Long movieId);
+
+
 }

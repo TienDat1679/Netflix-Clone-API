@@ -51,6 +51,11 @@ public class MovieController {
       return ResponseEntity.ok(movie);
    }
 
+   @GetMapping("/search/movie-same")
+   public ResponseEntity<?> searchMoviesWithSameGenres(@RequestParam("id") Long id) {
+      List<Movie> movies = movieRepo.findMoviesByGenreId(id);
+      return ResponseEntity.ok(movies);
+   }
 
 
 }

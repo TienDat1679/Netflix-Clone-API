@@ -1,6 +1,7 @@
 package com.backend.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +25,18 @@ public class GenreController {
     private GenreService genreService;
 
     @GetMapping("/movies")
-    public ResponseEntity<List<Genre>> getAllGenresMovies() {
-        List<Genre> genres = genreRepository.findAll();
-        return ResponseEntity.ok(genres);
+    public ResponseEntity<List<Genre>> getMovieGenres() {
+        List<Genre> movieGenres = genreRepository.findAll().stream()
+                .filter(genre -> !genre.getMovies().isEmpty())
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(movieGenres);
     }
 
-    @GetMapping
-    public ResponseEntity<?> getAllGenres() {
-        List<GenreDTO> genres = genreService.getAllGenres();
-        return ResponseEntity.ok(genres);
+    @GetMapping("/series")
+    public ResponseEntity<List<Genre>> getSeriesGenres() {
+        List<Genre> movieGenres = genreRepository.findAll().stream()
+                .filter(genre -> !genre.getSeries().isEmpty())
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(movieGenres);
     }
 }

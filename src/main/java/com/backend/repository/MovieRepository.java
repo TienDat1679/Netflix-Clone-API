@@ -12,7 +12,9 @@ import com.backend.entity.Movie;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
+
     Optional<Movie> findByTitle(String title);
+    
     @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g.id = :genreId")
     List<Movie> findMoviesByGenreId(@Param("genreId") Long genreId);
     

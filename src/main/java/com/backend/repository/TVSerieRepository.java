@@ -12,6 +12,7 @@ import com.backend.entity.TVSerie;
 
 @Repository
 public interface TVSerieRepository extends JpaRepository<TVSerie, Long> {
+    
     Optional<TVSerie> findByName(String name);
     
     @Query("SELECT t FROM TVSerie t WHERE LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%'))")

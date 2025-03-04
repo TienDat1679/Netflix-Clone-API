@@ -17,4 +17,9 @@ public interface TVSerieRepository extends JpaRepository<TVSerie, Long> {
     
     @Query("SELECT t FROM TVSerie t WHERE LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<TVSerie> searchTVSeriesByName(@Param("name") String name);
+
+    // Lấy top 10 phim theo voteCount giảm dần
+    List<TVSerie> findTop10ByOrderByVoteCountDesc();
+
+    List<TVSerie> findTop5ByOrderByViewCountDesc();
 }

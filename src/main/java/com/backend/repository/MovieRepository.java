@@ -21,13 +21,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query("SELECT m FROM Movie m WHERE LOWER(m.title) LIKE LOWER(CONCAT('%', :title, '%'))")
     List<Movie> searchMoviesByTitle(@Param("title") String title);
 
-
-
     @Query("SELECT DISTINCT m FROM Movie m " +
                 "JOIN m.genres g " +
                 "WHERE g.id IN (SELECT g2.id FROM Movie m2 JOIN m2.genres g2 WHERE m2.id = :movieId) " +
                 "AND m.id <> :movieId")
     List<Movie> findMoviesWithSameGenres(@Param("movieId") Long movieId);
 
+    // Lấy top 10 phim theo voteCount giảm dần
+    List<Movie> findTop10ByOrderByVoteCountDesc();
 
+    List<Movie> findTop5ByOrderByViewCountDesc();
 }

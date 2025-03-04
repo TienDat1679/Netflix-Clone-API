@@ -33,6 +33,8 @@ public class TVSerie {
     private String posterPath;
     private String backdropPath;
     private boolean adult;
+    private Long voteCount;
+    private Long viewCount;
 
 //    @JsonIgnore
     @OneToMany(mappedBy = "tvSerie")

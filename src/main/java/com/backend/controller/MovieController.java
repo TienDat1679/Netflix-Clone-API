@@ -24,7 +24,7 @@ import com.backend.service.TMDBService;
 public class MovieController {
 
    @Autowired
-   private MovieRepository movieRepo;
+   private MovieRepository movieRepository;
    
    @Autowired
    private GenreRepository genreRepository;
@@ -35,27 +35,31 @@ public class MovieController {
    
    @GetMapping("/{genreId}")
    public ResponseEntity<?> getAllGenresMovies(@PathVariable("genreId") Long id) {
-       List<Movie> movies = movieRepo.findMoviesByGenreId(id);
+       List<Movie> movies = movieRepository.findMoviesByGenreId(id);
        return ResponseEntity.ok(movies);
    }
 
    @GetMapping("")
    public ResponseEntity<?> getAllMovies() {
-      List<Movie> movies = movieRepo.findAll();
+      List<Movie> movies = movieRepository.findAll();
       return ResponseEntity.ok(movies);
    }
 
    @GetMapping("/search")
    public ResponseEntity<?> searchMovies(@RequestParam("id") Long id) {
-      Optional<Movie> movie = movieRepo.findById(id);
+      Optional<Movie> movie = movieRepository.findById(id);
       return ResponseEntity.ok(movie);
    }
 
    @GetMapping("/search/movie-same")
    public ResponseEntity<?> searchMoviesWithSameGenres(@RequestParam("id") Long id) {
-      List<Movie> movies = movieRepo.findMoviesByGenreId(id);
+      List<Movie> movies = movieRepository.findMoviesByGenreId(id);
       return ResponseEntity.ok(movies);
    }
 
-
+   @GetMapping("/top10")
+   public List<Movie> getTop10Movies() {
+        return movieRepository.findTop10ByOrderByVoteCountDesc();
+   }
+   
 }

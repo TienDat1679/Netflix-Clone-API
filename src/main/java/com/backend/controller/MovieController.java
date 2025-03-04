@@ -46,14 +46,18 @@ public class MovieController {
    }
 
    @GetMapping("/search")
-   public ResponseEntity<?> searchMovies(@RequestParam("id") Long id) {
+   public ResponseEntity<?> searchMovies(@RequestParam("movieId") Long id) {
       Optional<Movie> movie = movieRepo.findById(id);
       return ResponseEntity.ok(movie);
    }
 
    @GetMapping("/search/movie-same")
-   public ResponseEntity<?> searchMoviesWithSameGenres(@RequestParam("id") Long id) {
+   public ResponseEntity<?> searchMoviesWithSameGenres(@RequestParam("movieId") Long id) {
       List<Movie> movies = movieRepo.findMoviesByGenreId(id);
+      if(movies.isEmpty())
+      {
+         movies = movieRepo.findAll();
+      }
       return ResponseEntity.ok(movies);
    }
 

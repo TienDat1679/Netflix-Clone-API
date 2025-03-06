@@ -1,5 +1,6 @@
 package com.backend.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.dto.MediaDTO;
 import com.backend.dto.TMDB.MovieDto;
 import com.backend.entity.Genre;
 import com.backend.entity.Movie;
@@ -18,6 +20,7 @@ import com.backend.repository.GenreRepository;
 import com.backend.repository.MovieRepository;
 import com.backend.service.GenreService;
 import com.backend.service.TMDBService;
+import com.backend.util.MediaMapper;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -32,11 +35,12 @@ public class MovieController {
    @Autowired
    private GenreService genreService;
    
-   
    @GetMapping("/{genreId}")
-   public ResponseEntity<?> getAllGenresMovies(@PathVariable("genreId") Long id) {
-       List<Movie> movies = movieRepository.findMoviesByGenreId(id);
-       return ResponseEntity.ok(movies);
+   public List<?> getAllGenresMovies(@PathVariable Long genreId) {
+      List<Movie> movies = movieRepository.findMoviesByGenreId(genreId);
+      List<MediaDTO> mediaList = new ArrayList<>();
+      mediaList.addAll(MediaMapper.toMediaDTOList(movies));
+      return mediaList;
    }
 
    @GetMapping("")

@@ -52,4 +52,5 @@ public class Movie {
     @ManyToMany
     @JoinTable(name = "movie_credits", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "credit_id"))
     private List<Credit> credits;
+
 }

@@ -25,4 +25,6 @@ public interface TVSerieRepository extends JpaRepository<TVSerie, Long> {
     List<TVSerie> findTop10ByOrderByVoteCountDesc();
 
     List<TVSerie> findTop5ByOrderByViewCountDesc();
+
+    List<TVSerie> findByNameContainingIgnoreCase(String name);
 }

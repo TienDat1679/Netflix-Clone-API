@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.dto.MediaDTO;
@@ -25,6 +26,18 @@ public class MediaController {
 
     @Autowired
     private TVSerieRepository tvSeriesRepository;
+
+    @GetMapping("/search")
+    public List<MediaDTO> searchMedia(@RequestParam String keyword) {
+        List<Movie> movies = movieRepository.findByTitleContainingIgnoreCase(keyword);
+        List<TVSerie> tvSeries = tvSeriesRepository.findByNameContainingIgnoreCase(keyword);
+
+        List<MediaDTO> results = new ArrayList<>();
+        results.addAll(MediaMapper.toMediaDTOListFromTvSeries(tvSeries));
+        results.addAll(MediaMapper.toMediaDTOList(movies));
+
+        return results;
+    }
 
     @GetMapping("/{genreId}")
     public List<MediaDTO> getMediaByGenre(@PathVariable Long genreId) {

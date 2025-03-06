@@ -31,4 +31,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findTop10ByOrderByVoteCountDesc();
 
     List<Movie> findTop5ByOrderByViewCountDesc();
+
+    List<Movie> findByTitleContainingIgnoreCase(String title);
 }

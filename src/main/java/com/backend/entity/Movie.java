@@ -36,6 +36,8 @@ public class Movie {
     private boolean adult;
     private boolean video;
     private int runtime;
+    private Long voteCount;
+    private Long viewCount;
 
 //    @JsonIgnore
     @OneToMany(mappedBy = "movie")

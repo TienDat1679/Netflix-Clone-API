@@ -24,6 +24,12 @@ public class GenreController {
     @Autowired
     private GenreService genreService;
 
+    @GetMapping
+    public ResponseEntity<?> getAllGenres() {
+        List<GenreDTO> genres = genreService.getAllGenres();
+        return ResponseEntity.ok(genres);
+    }
+
     @GetMapping("/movies")
     public ResponseEntity<List<Genre>> getMovieGenres() {
         List<Genre> movieGenres = genreRepository.findAll().stream()

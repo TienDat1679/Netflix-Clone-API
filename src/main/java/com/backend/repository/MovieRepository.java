@@ -13,14 +13,14 @@ import com.backend.entity.Movie;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
+
     Optional<Movie> findByTitle(String title);
+    
     @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g.id = :genreId")
     List<Movie> findMoviesByGenreId(@Param("genreId") Long genreId);
     
     @Query("SELECT m FROM Movie m WHERE LOWER(m.title) LIKE LOWER(CONCAT('%', :title, '%'))")
     List<Movie> searchMoviesByTitle(@Param("title") String title);
-
-
 
     @Query("SELECT DISTINCT m FROM Movie m " +
                 "JOIN m.genres g " +
@@ -28,6 +28,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
                 "AND m.id <> :movieId")
     List<Movie> findMoviesWithSameGenres(@Param("movieId") Long movieId);
 
-    @Query("SELECT m.trailers FROM Movie m WHERE m.id = :id")
-    List<Trailer> findTrailersByMovieId(@Param("id") Long id);
+	@Query("SELECT m.trailers FROM Movie m WHERE m.id = :id")
+    List<Trailer> findTrailersByMovieId(@Param("id") Long id);    // Lấy top 10 phim theo voteCount giảm dần
+    List<Movie> findTop10ByOrderByVoteCountDesc();
+
+    List<Movie> findTop5ByOrderByViewCountDesc();
 }

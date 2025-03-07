@@ -27,6 +27,7 @@ import com.backend.util.MediaMapper;
 public class MovieController {
 
    @Autowired
+
    private MovieRepository movieRepository;
    
    @Autowired
@@ -45,19 +46,27 @@ public class MovieController {
 
    @GetMapping("")
    public ResponseEntity<?> getAllMovies() {
+
       List<Movie> movies = movieRepository.findAll();
       return ResponseEntity.ok(movies);
    }
 
    @GetMapping("/search")
-   public ResponseEntity<?> searchMovies(@RequestParam("id") Long id) {
+   public ResponseEntity<?> searchMovies(@RequestParam("movieId") Long id) {
+
       Optional<Movie> movie = movieRepository.findById(id);
       return ResponseEntity.ok(movie);
    }
 
    @GetMapping("/search/movie-same")
-   public ResponseEntity<?> searchMoviesWithSameGenres(@RequestParam("id") Long id) {
+
+   public ResponseEntity<?> searchMoviesWithSameGenres(@RequestParam("movieId") Long id) {
+
       List<Movie> movies = movieRepository.findMoviesByGenreId(id);
+      if(movies.isEmpty())
+      {
+         movies = movieRepository.findAll();
+      }
       return ResponseEntity.ok(movies);
    }
 

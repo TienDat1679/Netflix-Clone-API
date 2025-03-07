@@ -3,6 +3,7 @@ package com.backend.repository;
 import java.util.List;
 import java.util.Optional;
 
+import com.backend.entity.Trailer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,7 +28,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
                 "AND m.id <> :movieId")
     List<Movie> findMoviesWithSameGenres(@Param("movieId") Long movieId);
 
-    // Lấy top 10 phim theo voteCount giảm dần
+	@Query("SELECT m.trailers FROM Movie m WHERE m.id = :id")
+    List<Trailer> findTrailersByMovieId(@Param("id") Long id);    // Lấy top 10 phim theo voteCount giảm dần
     List<Movie> findTop10ByOrderByVoteCountDesc();
 
     List<Movie> findTop5ByOrderByViewCountDesc();

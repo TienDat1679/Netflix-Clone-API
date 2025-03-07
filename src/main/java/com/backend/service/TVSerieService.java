@@ -1,6 +1,7 @@
 package com.backend.service;
 
 
+import com.backend.entity.Episode;
 import com.backend.entity.TVSerie;
 import com.backend.repository.TVSerieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +22,10 @@ public class TVSerieService {
 
     public Optional<TVSerie> findTVSerieById(Long id) {
         return  tvSerieRepository.findById(id);
+    }
+
+
+    public List<Episode> findAllEpisodesOfTVSerie(Long tvSeriesId )    {
+        return tvSerieRepository.findEpisodesByTVSerieId(tvSeriesId);
     }
 }

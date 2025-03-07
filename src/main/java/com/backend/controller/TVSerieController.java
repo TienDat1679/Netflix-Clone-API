@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.backend.dto.MediaDTO;
+import com.backend.entity.Episode;
+import com.backend.entity.Movie;
 import com.backend.entity.TVSerie;
 import com.backend.repository.TVSerieRepository;
 import com.backend.service.TVSerieService;
@@ -50,4 +52,14 @@ public class TVSerieController {
     public List<TVSerie> getTop10Movies() {
         return serieRepository.findTop10ByOrderByVoteCountDesc();
     }
+
+
+    @GetMapping("/esp")
+    public ResponseEntity<?>  getEpsOfSeries(@RequestParam("seriesId") Long id) {
+        List<Episode> epsList=tvSerieService.findAllEpisodesOfTVSerie(id);
+    return ResponseEntity.ok(epsList);
+    }
+
+
+
 }

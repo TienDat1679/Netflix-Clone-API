@@ -39,6 +39,22 @@ public class MediaController {
         return results;
     }
 
+    @GetMapping("/series/top10")
+    public List<MediaDTO> getTop10Series() {
+        List<TVSerie> series = tvSeriesRepository.findTop10ByOrderByVoteCountDesc();
+        List<MediaDTO> mediaList = new ArrayList<>();
+        mediaList.addAll(MediaMapper.toMediaDTOListFromTvSeries(series));
+        return mediaList;
+    }
+
+    @GetMapping("/movie/top10")
+    public List<MediaDTO> getTop10Movies() {
+        List<Movie> movies = movieRepository.findTop10ByOrderByVoteCountDesc();
+        List<MediaDTO> mediaList = new ArrayList<>();
+        mediaList.addAll(MediaMapper.toMediaDTOList(movies));
+        return mediaList;
+    }
+
     @GetMapping("/{genreId}")
     public List<MediaDTO> getMediaByGenre(@PathVariable Long genreId) {
         List<Movie> movies = movieRepository.findMoviesByGenreId(genreId);

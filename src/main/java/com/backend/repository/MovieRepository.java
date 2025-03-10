@@ -35,4 +35,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findTop5ByOrderByViewCountDesc();
 
     List<Movie> findByTitleContainingIgnoreCase(String title);
+    
+    @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g.id IN :genreIds AND m.id <> :id")
+    List<Movie> findMoviesByGenreIds(@Param("genreIds") List<Long> genreIds, @Param("id") Long id);
+
 }

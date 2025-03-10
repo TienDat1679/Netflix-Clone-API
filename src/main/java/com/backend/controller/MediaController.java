@@ -2,7 +2,11 @@ package com.backend.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.backend.entity.Genre;
+import com.backend.repository.GenreRepository;
+import com.backend.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +30,12 @@ public class MediaController {
 
     @Autowired
     private TVSerieRepository tvSeriesRepository;
+
+    @Autowired
+    private GenreRepository genreRepository;
+
+    @Autowired
+    private ContentService contentService;
 
     @GetMapping("/search")
     public List<MediaDTO> searchMedia(@RequestParam String keyword) {
@@ -66,6 +76,11 @@ public class MediaController {
 
         return mediaList;
     }
+    @GetMapping("/same")
+    public List<MediaDTO> getMediaSame(@RequestParam("id") Long id) {
+            return contentService.getSameMediaById(id);
+        }
+
 
     @GetMapping("/trending")
     public List<MediaDTO> getTrendingMedia() {

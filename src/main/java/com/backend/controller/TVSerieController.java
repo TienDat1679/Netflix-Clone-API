@@ -8,8 +8,10 @@ import com.backend.dto.MediaDTO;
 import com.backend.entity.Episode;
 import com.backend.entity.Movie;
 import com.backend.entity.TVSerie;
+import com.backend.entity.Trailer;
 import com.backend.repository.TVSerieRepository;
 import com.backend.service.TVSerieService;
+import com.backend.service.TrailerService;
 import com.backend.util.MediaMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class TVSerieController {
 
     @Autowired
     private TVSerieService tvSerieService;
+
+    @Autowired
+    private TrailerService trailerService;
 
     @Autowired
     private TVSerieRepository serieRepository;
@@ -60,6 +65,11 @@ public class TVSerieController {
     return ResponseEntity.ok(epsList);
     }
 
+
+    @GetMapping("/trailer")
+    public List<Trailer> getTrailersBySeriesId(@RequestParam("id") Long seriesId) {
+        return trailerService.getTrailersBySeriesId(seriesId);
+    }
 
 
 }

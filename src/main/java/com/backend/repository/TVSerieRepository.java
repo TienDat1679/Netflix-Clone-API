@@ -32,5 +32,7 @@ public interface TVSerieRepository extends JpaRepository<TVSerie, Long> {
     @Query("SELECT t.episodes FROM TVSerie t WHERE t.id = :seriesId")
     List<Episode> findEpisodesByTVSerieId(@Param("seriesId") Long seriesId);
 
+    @Query("SELECT t FROM TVSerie t JOIN t.genres g WHERE g.id IN :genreIds AND t.id <> :id")
+    List<TVSerie> findTVSeriesByGenreIds(@Param("genreIds") List<Long> genreIds, @Param("id") Long id);
 
 }

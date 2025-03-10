@@ -33,4 +33,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findTop10ByOrderByVoteCountDesc();
 
     List<Movie> findTop5ByOrderByViewCountDesc();
+
+    @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g.id IN :genreIds AND m.id <> :id")
+    List<Movie> findMoviesByGenreIds(@Param("genreIds") List<Long> genreIds, @Param("id") Long id);
+
 }

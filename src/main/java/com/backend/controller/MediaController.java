@@ -2,12 +2,14 @@ package com.backend.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.backend.entity.Genre;
+import com.backend.repository.GenreRepository;
+import com.backend.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.backend.dto.MediaDTO;
 import com.backend.entity.Movie;
@@ -26,6 +28,12 @@ public class MediaController {
     @Autowired
     private TVSerieRepository tvSeriesRepository;
 
+    @Autowired
+    private GenreRepository genreRepository;
+
+    @Autowired
+    private ContentService contentService;
+
     @GetMapping("/{genreId}")
     public List<MediaDTO> getMediaByGenre(@PathVariable Long genreId) {
         List<Movie> movies = movieRepository.findMoviesByGenreId(genreId);
@@ -37,6 +45,11 @@ public class MediaController {
 
         return mediaList;
     }
+    @GetMapping("/same")
+    public List<MediaDTO> getMediaSame(@RequestParam("id") Long id) {
+            return contentService.getSameMediaById(id);
+        }
+
 
     @GetMapping("/trending")
     public List<MediaDTO> getTrendingMedia() {

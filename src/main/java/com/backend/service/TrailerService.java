@@ -16,4 +16,7 @@ public class TrailerService {
     public List<Trailer> getTrailersBySeriesId(Long seriesId) {
         return trailerRepository.findByTvSerie_Id(seriesId);
     }
+    public List<Trailer> getTrailersMovie(Long movieId) {
+        return trailerRepository.findByMovie_Id(movieId);
+    }
 }

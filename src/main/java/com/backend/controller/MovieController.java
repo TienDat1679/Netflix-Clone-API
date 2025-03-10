@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.backend.entity.Trailer;
+import com.backend.service.TrailerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,9 @@ public class MovieController {
 
    @Autowired
    private GenreService genreService;
+
+   @Autowired
+   private TrailerService trailerService;
    
    @GetMapping("/{genreId}")
    public List<?> getAllGenresMovies(@PathVariable Long genreId) {
@@ -73,6 +78,11 @@ public class MovieController {
    @GetMapping("/top10")
    public List<Movie> getTop10Movies() {
         return movieRepository.findTop10ByOrderByVoteCountDesc();
+   }
+
+   @GetMapping("/trailer")
+   public List<Trailer> getTrailersByMovieId(@RequestParam("id") Long movieId) {
+      return trailerService.getTrailersMovie(movieId);
    }
    
 }

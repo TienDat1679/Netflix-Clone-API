@@ -8,7 +8,7 @@ import com.backend.entity.Trailer;
 import java.util.List;
 
 @Repository
-public interface TrailerRepository extends JpaRepository<Trailer, Long> {
+public interface TrailerRepository extends JpaRepository<Trailer, String> {
 
     List<Trailer> findByTvSerie_Id(Long seriesId);
 

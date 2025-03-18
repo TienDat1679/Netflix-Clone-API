@@ -24,15 +24,15 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/{userId}/like/{mediaType}/{mediaId}")
-    public ResponseEntity<String> likeMedia(@PathVariable int userId,
+    public ResponseEntity<String> likeMedia(@PathVariable String userId,
             @PathVariable String mediaType,
             @PathVariable Long mediaId) {
         userService.likeMedia(userId, mediaId, mediaType);
         return ResponseEntity.ok("Liked " + mediaType + " successfully");
-    }
+    }   
 
     @PostMapping("/{userId}/watchlist/{mediaType}/{mediaId}")
-    public ResponseEntity<String> addToWatchlist(@PathVariable int userId,
+    public ResponseEntity<String> addToWatchlist(@PathVariable String userId,
             @PathVariable String mediaType,
             @PathVariable Long mediaId) {
         userService.addToWatchlist(userId, mediaId, mediaType);
@@ -40,12 +40,12 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/likes")
-    public List<MediaDTO> getLikedMedia(@PathVariable int userId) {
+    public List<MediaDTO> getLikedMedia(@PathVariable String userId) {
         return userService.getLikedMedia(userId);
     }
 
     @GetMapping("/{userId}/watchlist")
-    public List<MediaDTO> getWatchlistMedia(@PathVariable int userId) {
+    public List<MediaDTO> getWatchlistMedia(@PathVariable String userId) {
         return userService.getWatchlistMedia(userId);
     }
 }

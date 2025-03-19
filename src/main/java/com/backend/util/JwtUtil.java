@@ -1,42 +1,42 @@
-package com.backend.util;
+// package com.backend.util;
 
-import org.springframework.stereotype.Component;
+// import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+// import io.jsonwebtoken.Claims;
+// import io.jsonwebtoken.Jwts;
+// import io.jsonwebtoken.security.Keys;
 
-import java.security.Key;
-import java.util.Date;
+// import java.security.Key;
+// import java.util.Date;
 
-@Component
-public class JwtUtil {
+// @Component
+// public class JwtUtil {
 	
-    private final Key key = Keys.hmacShaKeyFor("abcksdkiiiiiiiiiiiiiiiskfklsdfksdjfkjsd".getBytes());
+//     private final Key key = Keys.hmacShaKeyFor("abcksdkiiiiiiiiiiiiiiiskfklsdfksdjfkjsd".getBytes());
 
-    public String generateToken(String username) {
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 1000 * 10 (10s for testing)
-                .signWith(key)
-                .compact();
-    }
+//     public String generateToken(String username) {
+//         return Jwts.builder()
+//                 .setSubject(username)
+//                 .setIssuedAt(new Date())
+//                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 1000 * 10 (10s for testing)
+//                 .signWith(key)
+//                 .compact();
+//     }
 
-    public Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-    }
+//     public Claims extractAllClaims(String token) {
+//         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+//     }
 
-    public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
-    }
+//     public String extractUsername(String token) {
+//         return extractAllClaims(token).getSubject();
+//     }
 
-    public boolean isTokenExpired(String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
-    }
+//     public boolean isTokenExpired(String token) {
+//         return extractAllClaims(token).getExpiration().before(new Date());
+//     }
 
-    public boolean validateToken(String token, String username) {
-        return (extractUsername(token).equals(username) && !isTokenExpired(token));
-    }
+//     public boolean validateToken(String token, String username) {
+//         return (extractUsername(token).equals(username) && !isTokenExpired(token));
+//     }
 
-}
+// }

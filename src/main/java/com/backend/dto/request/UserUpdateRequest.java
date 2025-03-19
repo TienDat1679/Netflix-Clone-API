@@ -1,6 +1,6 @@
-package com.backend.dto.response;
+package com.backend.dto.request;
 
-import java.util.Set;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,11 +14,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
-    String id;
-	String name;
-	String email;
-	Integer otp;
-	int enabled;
-	Set<String> roles;
+public class UserUpdateRequest {
+    String password;
+    String name;
+    List<String> roles;
 }

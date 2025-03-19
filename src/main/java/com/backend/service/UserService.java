@@ -1,20 +1,26 @@
 package com.backend.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.backend.dto.MailBody;
 import com.backend.dto.MediaDTO;
 import com.backend.dto.request.RegisterRequest;
+import com.backend.dto.request.UserUpdateRequest;
 import com.backend.dto.response.UserResponse;
 import com.backend.entity.Movie;
 import com.backend.entity.TVSerie;
 import com.backend.entity.UserInfo;
 import com.backend.entity.UserLike;
 import com.backend.entity.UserWatchList;
+import com.backend.enums.Role;
 import com.backend.exception.AppException;
 import com.backend.exception.ErrorCode;
 import com.backend.mapper.MediaMapper;
@@ -108,12 +114,15 @@ public class UserService {
     }
 
     public UserResponse createUser(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
+        if (userRepository.existsByEmail(request.getEmail()))
             throw new AppException(ErrorCode.USER_EXISTED);
-        }
         
         UserInfo user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        HashSet<String> roles = new HashSet<>();
+        roles.add(Role.USER.name());
+        user.setRoles(roles);
 
         int otp = otpGenerator();
         MailBody mailBody = MailBody.builder()
@@ -125,6 +134,42 @@ public class UserService {
         user.setOtp(otp);
 
         return userMapper.toUserResponse(userRepository.save(user));
+    }
+
+    @PostAuthorize("returnObject.email == authentication.name")
+    public UserResponse getUser(String userId) {
+        UserInfo user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        return userMapper.toUserResponse(user);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserResponse> getUsers() {
+        return userRepository.findAll().stream()
+                .map(userMapper::toUserResponse)
+                .toList();
+    }
+
+    public UserResponse updateUser(String userId, UserUpdateRequest request) {
+        UserInfo user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        userMapper.updateUser(user, request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        return userMapper.toUserResponse(userRepository.save(user));
+    }
+
+    public UserResponse getMyInfo() {
+        var context = SecurityContextHolder.getContext();
+        String email = context.getAuthentication().getName();
+        UserInfo user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        return userMapper.toUserResponse(user);
+    }
+
+    public void deleteUser(String userId) {
+        userRepository.deleteById(userId);
     }
 
     public void save(UserInfo user) {

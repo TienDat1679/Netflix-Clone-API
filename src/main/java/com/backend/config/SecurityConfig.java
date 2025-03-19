@@ -4,11 +4,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -17,8 +15,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-
-import com.backend.enums.Role;
 
 @Configuration
 @EnableWebSecurity
@@ -32,22 +28,23 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+
 		httpSecurity
 				.csrf(csrf -> csrf.disable())
-
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
 						//.requestMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.name())
-						.anyRequest().authenticated())
-
+						.anyRequest().authenticated()
+		);
+		
+		httpSecurity
 				.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtCongfig -> jwtCongfig
 						.decoder(jwtDecoder())
 						//.jwtAuthenticationConverter(jwtAuthenticationConverter())
-						))
-
-				.sessionManagement(session -> session
-						.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+				)
+				.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+		);
+		
 		return httpSecurity.build();
 	}
 

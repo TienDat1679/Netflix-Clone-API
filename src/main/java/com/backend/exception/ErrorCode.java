@@ -1,5 +1,7 @@
 package com.backend.exception;
 
+import org.springframework.http.HttpStatus;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,20 +11,22 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public enum ErrorCode {
-    UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error"),
-    INVALID_KEY(1001, "Invalid message key in validation"),
-    USER_EXISTED(1002, "User existed"),
-    INVALID_USERNAME(1003, "Username must be at least 3 characters"),
-    INVALID_PASSWORD(1004, "Password must be at least 5 characters"),
-    INVALID_EMAIL(1005, "Invalid email"),
-    USER_NOT_FOUND(1006, "User not found"),
-    MOVIE_NOT_FOUND(1007, "Movie not found"),
-    TV_SERIES_NOT_FOUND(1008, "TV Series not found"),
-    INVALID_MEDIA_TYPE(1009, "Invalid media type"),
-    MEDIA_NOT_FOUND(1010, "Media not found"),
-    UNAUTHENTICATED(1011, "Unauthenticated"),
+    UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
+    INVALID_KEY(1001, "Invalid message key in validation", HttpStatus.BAD_REQUEST),
+    USER_EXISTED(1002, "User existed", HttpStatus.BAD_REQUEST),
+    INVALID_USERNAME(1003, "Username must be at least 3 characters", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD(1004, "Password must be at least 5 characters", HttpStatus.BAD_REQUEST),
+    INVALID_EMAIL(1005, "Invalid email", HttpStatus.BAD_REQUEST),
+    USER_NOT_FOUND(1006, "User not found", HttpStatus.NOT_FOUND),
+    MOVIE_NOT_FOUND(1007, "Movie not found", HttpStatus.NOT_FOUND),
+    TV_SERIES_NOT_FOUND(1008, "TV Series not found", HttpStatus.NOT_FOUND),
+    INVALID_MEDIA_TYPE(1009, "Invalid media type", HttpStatus.BAD_REQUEST),
+    MEDIA_NOT_FOUND(1010, "Media not found", HttpStatus.NOT_FOUND),
+    UNAUTHENTICATED(1011, "Unauthenticated", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED(1012, "You do not have permission", HttpStatus.FORBIDDEN),
     ;
 
     int code;
     String message;
+    HttpStatus statusCode;
 }

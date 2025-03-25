@@ -13,9 +13,10 @@ import com.backend.entity.UserInfo;
 import jakarta.transaction.Transactional;
 
 @Repository
-public interface UserInfoRepository extends JpaRepository<UserInfo, Integer> {
+public interface UserInfoRepository extends JpaRepository<UserInfo, String> {
 	Optional<UserInfo> findByName(String username);
 	Optional<UserInfo> findByEmail(String email);
+	boolean existsByEmail(String email);
 	
 	@Transactional
 	@Modifying

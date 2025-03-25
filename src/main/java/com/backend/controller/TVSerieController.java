@@ -1,42 +1,37 @@
 package com.backend.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.backend.dto.MediaDTO;
 import com.backend.entity.Episode;
-import com.backend.entity.Movie;
 import com.backend.entity.TVSerie;
 import com.backend.entity.Trailer;
 import com.backend.repository.TVSerieRepository;
+import com.backend.service.MediaService;
 import com.backend.service.TVSerieService;
 import com.backend.service.TrailerService;
-import com.backend.util.MediaMapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/series")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TVSerieController {
-
-    @Autowired
-    private TVSerieService tvSerieService;
-
-    @Autowired
-    private TrailerService trailerService;
-
-    @Autowired
-    private TVSerieRepository serieRepository;
+    TVSerieService tvSerieService;
+    TrailerService trailerService;
+    TVSerieRepository serieRepository;
+    MediaService mediaService;
 
     @GetMapping("/{genreId}")
     public List<?> getSeriesByGenre(@PathVariable Long genreId) {
         List<TVSerie> tvSeries = serieRepository.findTvSeriesByGenreId(genreId);
-        List<MediaDTO> mediaList = new ArrayList<>();
-        mediaList.addAll(MediaMapper.toMediaDTOListFromTvSeries(tvSeries));
-        return mediaList;
+        return mediaService.tvSeriesToMediaDTOList(tvSeries);
     }    
 
     @GetMapping("")

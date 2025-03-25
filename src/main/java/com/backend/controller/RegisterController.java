@@ -2,9 +2,7 @@ package com.backend.controller;
 
 import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,60 +10,35 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.dto.ApiResponse;
 import com.backend.dto.MailBody;
-import com.backend.dto.RegisterRequest;
+import com.backend.dto.request.RegisterRequest;
+import com.backend.dto.response.UserResponse;
 import com.backend.entity.UserInfo;
 import com.backend.repository.UserInfoRepository;
 import com.backend.service.EmailService;
 import com.backend.service.UserService;
 
+import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
 @RestController
 @RequestMapping("/api/register")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RegisterController {
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private UserInfoRepository userInfoRepository;
+    UserService userService;
+    EmailService emailService;
+    UserInfoRepository userInfoRepository;
 
     @PostMapping
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
-        try {
-            // Kiểm tra xem user đã tồn tại chưa
-            if (userService.existsByEmail(registerRequest.getEmail())) {
-                return ResponseEntity.badRequest().body("Người dùng đã tồn tại.");
-            }
-
-            // Tạo tài khoản mới
-            UserInfo user = new UserInfo();
-            user.setName(registerRequest.getUsername());
-            user.setEmail(registerRequest.getEmail());
-            user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-            user.setRoles("ROLE_USER");
-            user.setEnabled(0); // Tài khoản chưa được kích hoạt
-
-            int otp = otpGenerator();
-            MailBody mailBody = MailBody.builder()
-				.to(registerRequest.getEmail())
-				.text("This is the OTP for verify your Account request: " + otp)
-				.subject("OTP for Verify Account request")
-				.build();
-            emailService.sendSimpleMessage(mailBody);
-
-            user.setOtp(otp);
-            userService.save(user);
-
-            return ResponseEntity.ok("Đăng ký thành công. Vui lòng kiểm tra email để kích hoạt tài khoản.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Đăng ký thất bại. Vui lòng thử lại.");
-        }
+    public ApiResponse<UserResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+        return ApiResponse.<UserResponse>builder()
+                .message("Create user successfully")
+                .result(userService.createUser(registerRequest))
+                .build();
     }
 
     @GetMapping("/verify/{otp}/{email}")

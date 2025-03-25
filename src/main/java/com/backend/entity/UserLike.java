@@ -1,7 +1,5 @@
 package com.backend.entity;
 
-import java.util.Date;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,23 +12,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "watched_trailers")
+@Table(name = "user_likes")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class WatchedTrailer {
-
+@NoArgsConstructor
+public class UserLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "trailer_id", nullable = false)
-    private Trailer trailer;
-
-    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserInfo user;
 
-    private Date watchedAt;
+    @ManyToOne(optional = true) // Có thể NULL nếu là TVSerie
+    @JoinColumn(name = "movie_id", nullable = true)
+    private Movie movie;
+
+    @ManyToOne(optional = true) // Có thể NULL nếu là Movie
+    @JoinColumn(name = "tv_series_id", nullable = true)
+    private TVSerie tvSerie;
 }

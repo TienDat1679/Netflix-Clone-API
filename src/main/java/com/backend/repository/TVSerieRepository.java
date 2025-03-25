@@ -27,6 +27,8 @@ public interface TVSerieRepository extends JpaRepository<TVSerie, Long> {
 
     List<TVSerie> findTop5ByOrderByViewCountDesc();
 
+    List<TVSerie> findByNameContainingIgnoreCase(String name);
+
     @Query("SELECT t.episodes FROM TVSerie t WHERE t.id = :seriesId")
     List<Episode> findEpisodesByTVSerieId(@Param("seriesId") Long seriesId);
 

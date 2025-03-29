@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.dto.ApiResponse;
 import com.backend.dto.MailBody;
-import com.backend.dto.request.RegisterRequest;
+import com.backend.dto.request.UserCreationRequest;
 import com.backend.dto.response.UserResponse;
 import com.backend.entity.UserInfo;
 import com.backend.repository.UserInfoRepository;
@@ -34,7 +34,7 @@ public class RegisterController {
     UserInfoRepository userInfoRepository;
 
     @PostMapping
-    public ApiResponse<UserResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ApiResponse<UserResponse> registerUser(@Valid @RequestBody UserCreationRequest registerRequest) {
         return ApiResponse.<UserResponse>builder()
                 .message("Create user successfully")
                 .result(userService.createUser(registerRequest))

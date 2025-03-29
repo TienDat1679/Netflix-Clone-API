@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.backend.dto.MailBody;
 import com.backend.dto.MediaDTO;
-import com.backend.dto.request.RegisterRequest;
+import com.backend.dto.request.UserCreationRequest;
 import com.backend.dto.request.UserUpdateRequest;
 import com.backend.dto.response.UserResponse;
 import com.backend.entity.Movie;
@@ -26,6 +26,7 @@ import com.backend.exception.ErrorCode;
 import com.backend.mapper.MediaMapper;
 import com.backend.mapper.UserMapper;
 import com.backend.repository.MovieRepository;
+import com.backend.repository.RoleRepository;
 import com.backend.repository.TVSerieRepository;
 import com.backend.repository.UserInfoRepository;
 import com.backend.repository.UserLikeRepository;
@@ -34,8 +35,10 @@ import com.backend.repository.UserWatchListRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
@@ -44,6 +47,7 @@ public class UserService {
     TVSerieRepository tvSerieRepository;
     UserLikeRepository userLikeRepository;
     UserWatchListRepository userWatchlistRepository;
+    RoleRepository roleRepository;
     MediaMapper mediaMapper;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
@@ -113,7 +117,7 @@ public class UserService {
                 .toList();
     }
 
-    public UserResponse createUser(RegisterRequest request) {
+    public UserResponse createUser(UserCreationRequest request) {
         if (userRepository.existsByEmail(request.getEmail()))
             throw new AppException(ErrorCode.USER_EXISTED);
         
@@ -122,7 +126,7 @@ public class UserService {
 
         HashSet<String> roles = new HashSet<>();
         roles.add(Role.USER.name());
-        user.setRoles(roles);
+        //user.setRoles(roles);
 
         int otp = otpGenerator();
         MailBody mailBody = MailBody.builder()
@@ -143,7 +147,8 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('APPROVE_POST')")
     public List<UserResponse> getUsers() {
         return userRepository.findAll().stream()
                 .map(userMapper::toUserResponse)
@@ -153,9 +158,12 @@ public class UserService {
     public UserResponse updateUser(String userId, UserUpdateRequest request) {
         UserInfo user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
+        
         userMapper.updateUser(user, request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        
+        var roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }

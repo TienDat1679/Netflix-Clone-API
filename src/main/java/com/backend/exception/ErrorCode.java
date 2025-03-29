@@ -14,8 +14,8 @@ public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Invalid message key in validation", HttpStatus.BAD_REQUEST),
     USER_EXISTED(1002, "User existed", HttpStatus.BAD_REQUEST),
-    INVALID_USERNAME(1003, "Username must be at least 3 characters", HttpStatus.BAD_REQUEST),
-    INVALID_PASSWORD(1004, "Password must be at least 5 characters", HttpStatus.BAD_REQUEST),
+    INVALID_USERNAME(1003, "Username must be at least {min} characters", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD(1004, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
     INVALID_EMAIL(1005, "Invalid email", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(1006, "User not found", HttpStatus.NOT_FOUND),
     MOVIE_NOT_FOUND(1007, "Movie not found", HttpStatus.NOT_FOUND),
@@ -24,6 +24,7 @@ public enum ErrorCode {
     MEDIA_NOT_FOUND(1010, "Media not found", HttpStatus.NOT_FOUND),
     UNAUTHENTICATED(1011, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1012, "You do not have permission", HttpStatus.FORBIDDEN),
+    INVALID_DOB(1013, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     ;
 
     int code;

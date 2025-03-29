@@ -51,7 +51,8 @@ public class SecurityConfig {
 	@Bean
 	JwtAuthenticationConverter jwtAuthenticationConverter() {
 		JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-		jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+		jwtGrantedAuthoritiesConverter.setAuthorityPrefix(""); // bo prefix SCOPE_
+		//jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("roles"); // neu muon lay authorities tu claim roles
 
 		JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
 		jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);

@@ -35,7 +35,7 @@ public class ApplicationInitConfig {
                         .email("admin@netflix.com")
                         .password(passwordEncoder.encode("admin"))
                         .enabled(1)
-                        .roles(roles)
+                        //.roles(roles)
                         .build();
                 
                 userRepository.save(user);

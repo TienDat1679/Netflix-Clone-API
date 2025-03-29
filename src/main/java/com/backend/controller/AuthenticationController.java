@@ -1,4 +1,4 @@
-package com.backend.controller;
+ package com.backend.controller;
 
 import java.text.ParseException;
 
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backend.dto.ApiResponse;
 import com.backend.dto.request.AuthRequest;
 import com.backend.dto.request.IntrospectRequest;
+import com.backend.dto.request.LogoutRequest;
 import com.backend.dto.response.AuthResponse;
 import com.backend.dto.response.IntrospectResponse;
 import com.backend.service.AuthenticationService;
@@ -40,6 +41,14 @@ public class AuthenticationController {
         var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder()
                 .result(result)
+                .build();
+    }
+
+    @PostMapping("/logout")
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request)
+            throws JOSEException, ParseException {
+        authenticationService.logout(request);
+        return ApiResponse.<Void>builder()
                 .build();
     }
 }

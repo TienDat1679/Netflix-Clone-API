@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 import com.backend.dto.request.AuthRequest;
 import com.backend.dto.request.IntrospectRequest;
 import com.backend.dto.request.LogoutRequest;
+import com.backend.dto.request.RefreshRequest;
 import com.backend.dto.response.AuthResponse;
 import com.backend.dto.response.IntrospectResponse;
 import com.backend.entity.InvalidatedToken;
@@ -142,6 +143,34 @@ public class AuthenticationService {
 
         invalidatedTokenRepository.save(invalidatedToken);
     }
+
+    public AuthResponse refreshToken(RefreshRequest request)
+             throws ParseException, JOSEException {
+         var signedJWT = verifyToken(request.getToken());
+ 
+         var jti = signedJWT.getJWTClaimsSet().getJWTID();
+         var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+ 
+         InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                 .id(jti)
+                 .expirationTime(expiryTime)
+                 .build();
+ 
+         invalidatedTokenRepository.save(invalidatedToken);
+ 
+         var email = signedJWT.getJWTClaimsSet().getSubject();
+ 
+         var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED)
+         );
+ 
+         var token = generateToken(user);
+ 
+         return AuthResponse.builder()
+                 .token(token)
+                 .authenticated(true)
+                 .build();
+     }
 
     private SignedJWT verifyToken(String token) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());

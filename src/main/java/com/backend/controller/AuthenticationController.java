@@ -11,6 +11,7 @@ import com.backend.dto.ApiResponse;
 import com.backend.dto.request.AuthRequest;
 import com.backend.dto.request.IntrospectRequest;
 import com.backend.dto.request.LogoutRequest;
+import com.backend.dto.request.RefreshRequest;
 import com.backend.dto.response.AuthResponse;
 import com.backend.dto.response.IntrospectResponse;
 import com.backend.service.AuthenticationService;
@@ -43,6 +44,15 @@ public class AuthenticationController {
                 .result(result)
                 .build();
     }
+
+    @PostMapping("/refresh")
+     ApiResponse<AuthResponse> authenticate(@RequestBody RefreshRequest request)
+             throws ParseException, JOSEException {
+         var result = authenticationService.refreshToken(request);
+         return ApiResponse.<AuthResponse>builder()
+                 .result(result)
+                 .build();
+     }
 
     @PostMapping("/logout")
     ApiResponse<Void> logout(@RequestBody LogoutRequest request)

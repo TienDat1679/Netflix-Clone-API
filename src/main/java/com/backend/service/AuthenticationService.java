@@ -82,6 +82,9 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
+        if (user.getEnabled() == 0)
+            throw new AppException(ErrorCode.ACCOUNT_NOT_ACTIVATED);
+
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean authenticated = passwordEncoder.matches(request.getPassword(),
                 user.getPassword());

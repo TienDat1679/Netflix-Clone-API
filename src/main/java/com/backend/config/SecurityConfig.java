@@ -29,19 +29,21 @@ public class SecurityConfig {
 
 		httpSecurity
 				.csrf(csrf -> csrf.disable())
+
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
 						//.requestMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.name())
 						.anyRequest().authenticated()
-		);
-		
-		httpSecurity
-				.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtCongfig -> jwtCongfig
-						.decoder(customJwtDecoder)
-						.jwtAuthenticationConverter(jwtAuthenticationConverter())
 				)
-				.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-		);
+
+				.oauth2ResourceServer(oauth2 -> oauth2
+						.jwt(jwtCongfig -> jwtCongfig
+								.decoder(customJwtDecoder)
+								.jwtAuthenticationConverter(jwtAuthenticationConverter())
+						)
+						.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+				)
+		;
 		
 		return httpSecurity.build();
 	}

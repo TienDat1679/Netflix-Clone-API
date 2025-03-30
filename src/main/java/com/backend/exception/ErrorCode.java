@@ -25,6 +25,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(1011, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1012, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1013, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
+    ACCOUNT_NOT_ACTIVATED(1014, "Account not activated", HttpStatus.UNAUTHORIZED),
     ;
 
     int code;

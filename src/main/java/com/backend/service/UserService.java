@@ -180,8 +180,35 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    public void save(UserInfo user) {
+    public UserResponse verifyUser(String email, Integer otp) {
+        UserInfo user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        if (user.getOtp() == null || !user.getOtp().equals(otp)) {
+            throw new AppException(ErrorCode.INVALID_OTP);
+        }
+
+        user.setEnabled(1);
+        user.setOtp(null); // Clear OTP after successful verification
+        return userMapper.toUserResponse(userRepository.save(user));
+    }
+
+    public String resendOtp(String email) {
+        UserInfo user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        Integer otp = otpGenerator();
+        MailBody mailBody = MailBody.builder()
+                .to(email)
+                .text("This is the OTP for verify your Account request: " + otp)
+                .subject("OTP for Verify Account request")
+                .build();
+        emailService.sendSimpleMessage(mailBody);
+
+        user.setOtp(otp);
         userRepository.save(user);
+
+        return otp.toString();
     }
 
     private Integer otpGenerator() {

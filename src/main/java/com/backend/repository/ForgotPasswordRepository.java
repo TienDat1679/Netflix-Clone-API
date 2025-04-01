@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.backend.entity.ForgotPassword;
 import com.backend.entity.UserInfo;
 
+import jakarta.transaction.Transactional;
+
 @Repository
 public interface ForgotPasswordRepository extends JpaRepository<ForgotPassword, Integer> {
 	
@@ -17,4 +19,9 @@ public interface ForgotPasswordRepository extends JpaRepository<ForgotPassword, 
 	
 	@Query("SELECT fp FROM ForgotPassword fp WHERE fp.user = ?1")
     Optional<ForgotPassword> findByUser(UserInfo user);
+
+	boolean existsByUser(UserInfo user);
+
+	@Transactional
+	void deleteByUser(UserInfo user);
 }

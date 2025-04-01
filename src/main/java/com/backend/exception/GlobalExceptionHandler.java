@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
                 );
     }
 
-    @ExceptionHandler(AccessDeniedException.class) 
+    @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<?> handlingAccessDeniedException(AccessDeniedException exception) {
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
         return ResponseEntity.status(errorCode.getStatusCode())
@@ -77,7 +77,12 @@ public class GlobalExceptionHandler {
     }
 
     private String mapAttribute(String message, Map<String, Object> attributes) {
-        String minValue = attributes.get(MIN_ATTRIBUTE).toString();
-        return message.replace("{" + MIN_ATTRIBUTE + "}", minValue); // chuan java khi replace 1 chuoi nen dung {}
+        try {
+                String minValue = attributes.get(MIN_ATTRIBUTE).toString();
+                return message.replace("{" + MIN_ATTRIBUTE + "}", minValue); // chuan java khi replace 1 chuoi nen dung {}
+        } catch (NullPointerException e) {
+                // TODO: handle exception
+        }
+        return message;
     }
 }

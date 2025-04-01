@@ -26,6 +26,11 @@ public enum ErrorCode {
     UNAUTHORIZED(1012, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1013, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     ACCOUNT_NOT_ACTIVATED(1014, "Account not activated", HttpStatus.UNAUTHORIZED),
+    INVALID_OTP(1015, "Invalid OTP", HttpStatus.BAD_REQUEST),
+    OTP_NOT_FOUND(1016, "OTP not found", HttpStatus.NOT_FOUND),
+    OTP_EXPIRED(1017, "OTP expired", HttpStatus.BAD_REQUEST),
+    PASSWORD_NOT_MATCH(1018, "Password not match", HttpStatus.BAD_REQUEST),
+    INVALID_TOKEN(1019, "Invalid token", HttpStatus.UNAUTHORIZED),
     ;
 
     int code;

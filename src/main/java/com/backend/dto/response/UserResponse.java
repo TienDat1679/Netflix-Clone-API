@@ -1,5 +1,6 @@
 package com.backend.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import lombok.AccessLevel;
@@ -21,4 +22,6 @@ public class UserResponse {
 	Integer otp;
 	int enabled;
 	Set<String> roles;
+	LocalDateTime startDate;
+	LocalDateTime endDate;
 }

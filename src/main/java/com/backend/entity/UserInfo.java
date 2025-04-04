@@ -1,16 +1,10 @@
 package com.backend.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,9 +26,14 @@ public class UserInfo {
 	String password;
 	@Column(unique = true)
 	String email;
-	Set<String> roles;
+	@ElementCollection(fetch = FetchType.EAGER)
+	Set<String> roles; // Đổi từ String thành Set<String>
 	Integer otp;
 	int enabled;
+
+	LocalDateTime startDate; // Ngày bắt đầu VIP
+	LocalDateTime endDate;
+
 	
 	@OneToOne
 	ForgotPassword forgotpassword;

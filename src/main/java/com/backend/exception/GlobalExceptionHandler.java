@@ -78,11 +78,11 @@ public class GlobalExceptionHandler {
 
     private String mapAttribute(String message, Map<String, Object> attributes) {
         try {
-                String minValue = attributes.get(MIN_ATTRIBUTE).toString();
-                return message.replace("{" + MIN_ATTRIBUTE + "}", minValue); // chuan java khi replace 1 chuoi nen dung {}
+			String minValue = attributes.get(MIN_ATTRIBUTE).toString();
+			return message.replace("{" + MIN_ATTRIBUTE + "}", minValue); // chuan java khi replace 1 chuoi nen dung {}
         } catch (NullPointerException e) {
-                // TODO: handle exception
-        }
+			// TODO: handle exception
+		}
         return message;
     }
 }

@@ -1,8 +1,5 @@
 package com.backend.dto.response;
 
-import java.time.LocalDate;
-import java.util.Set;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,17 +9,10 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
-    String id;
-	String name;
-	String email;
-	Integer otp;
-	int enabled;
-	LocalDate dob;
-	Set<RoleResponse> roles;
-	LocalDateTime startDate;
-	LocalDateTime endDate;
+public class PermissionResponse {
+    String name;
+    String description;
 }

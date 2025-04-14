@@ -17,6 +17,7 @@ public interface MediaMapper {
 
     @Mapping(target = "title", source = "name")  // Chuyển name của TVSerie thành title
     @Mapping(target = "type", constant = "tv_series")
+    @Mapping(target = "releaseDate", source = "firstAirDate") // Chuyển firstAirDate của TVSerie thành releaseDate
     MediaDTO toMediaDTO(TVSerie tvSeries);
 
     default MediaDTO toMediaDTO(UserLike like) {

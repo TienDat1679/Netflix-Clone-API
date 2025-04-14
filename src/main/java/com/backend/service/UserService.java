@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.backend.dto.MailBody;
 import com.backend.dto.MediaDTO;
+import com.backend.dto.request.AddToWatchListRequest;
+import com.backend.dto.request.LikeRequest;
 import com.backend.dto.request.UserCreationRequest;
 import com.backend.dto.request.UserUpdateRequest;
 import com.backend.dto.response.UserResponse;
@@ -53,70 +55,6 @@ public class UserService {
     PasswordEncoder passwordEncoder;
     EmailService emailService;
 
-    public void likeMedia(String userId, Long mediaId, String type) {
-        UserInfo user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
-        UserLike userLike = new UserLike();
-        userLike.setUser(user);
-
-        if ("movie".equalsIgnoreCase(type)) {
-            Movie movie = movieRepository.findById(mediaId)
-                    .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
-            userLike.setMovie(movie);
-        } else if ("tv_series".equalsIgnoreCase(type)) {
-            TVSerie tvSeries = tvSerieRepository.findById(mediaId)
-                    .orElseThrow(() -> new AppException(ErrorCode.TV_SERIES_NOT_FOUND));
-            userLike.setTvSerie(tvSeries);
-        } else {
-            throw new AppException(ErrorCode.INVALID_MEDIA_TYPE);
-        }
-
-        userLikeRepository.save(userLike);
-    }
-
-    public void addToWatchlist(String userId, Long mediaId, String type) {
-        UserInfo user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
-        UserWatchList watchlist = new UserWatchList();
-        watchlist.setUser(user);
-
-        if ("movie".equalsIgnoreCase(type)) {
-            Movie movie = movieRepository.findById(mediaId)
-                    .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
-            watchlist.setMovie(movie);
-        } else if ("tv_series".equalsIgnoreCase(type)) {
-            TVSerie tvSeries = tvSerieRepository.findById(mediaId)
-                    .orElseThrow(() -> new AppException(ErrorCode.TV_SERIES_NOT_FOUND));
-            watchlist.setTvSerie(tvSeries);
-        } else {
-            throw new AppException(ErrorCode.INVALID_MEDIA_TYPE);
-        }
-
-        userWatchlistRepository.save(watchlist);
-    }
-
-    public List<MediaDTO> getLikedMedia(String userId) {
-        UserInfo user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
-        List<UserLike> likedItems = userLikeRepository.findByUser(user);
-        return likedItems.stream()
-                .map(mediaMapper::toMediaDTO)
-                .toList();
-    }
-
-    public List<MediaDTO> getWatchlistMedia(String userId) {
-        UserInfo user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
-        List<UserWatchList> watchlistItems = userWatchlistRepository.findByUser(user);
-        return watchlistItems.stream()
-                .map(mediaMapper::toMediaDTO)
-                .toList();
-    }
-
     public UserResponse createUser(UserCreationRequest request) {
         if (userRepository.existsByEmail(request.getEmail()))
             throw new AppException(ErrorCode.USER_EXISTED);
@@ -124,9 +62,10 @@ public class UserService {
         UserInfo user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        HashSet<String> roles = new HashSet<>();
-        roles.add(Role.USER.name());
-        //user.setRoles(roles);
+        var role = roleRepository.findById(Role.USER.name())
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        var roles = List.of(role);
+        user.setRoles(new HashSet<>(roles));
 
         int otp = otpGenerator();
         MailBody mailBody = MailBody.builder()
@@ -209,6 +148,128 @@ public class UserService {
         userRepository.save(user);
 
         return otp.toString();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    public void likeMedia(String userId, LikeRequest request) {
+        UserInfo user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        UserLike userLike = new UserLike();
+        userLike.setUser(user);
+
+        if ("movie".equalsIgnoreCase(request.getType())) {
+            Movie movie = movieRepository.findById(request.getMediaId())
+                    .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
+            userLike.setMovie(movie);
+            movieRepository.incrementVoteCount(request.getMediaId());
+        } else if ("tv_series".equalsIgnoreCase(request.getType())) {
+            TVSerie tvSeries = tvSerieRepository.findById(request.getMediaId())
+                    .orElseThrow(() -> new AppException(ErrorCode.TV_SERIES_NOT_FOUND));
+            userLike.setTvSerie(tvSeries);
+            tvSerieRepository.incrementVoteCount(request.getMediaId());
+        } else {
+            throw new AppException(ErrorCode.INVALID_MEDIA_TYPE);
+        }
+
+        userLikeRepository.save(userLike);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    public void addToWatchlist(String userId, AddToWatchListRequest request) {
+        UserInfo user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        UserWatchList watchlist = new UserWatchList();
+        watchlist.setUser(user);
+
+        if ("movie".equalsIgnoreCase(request.getType())) {
+            Movie movie = movieRepository.findById(request.getMediaId())
+                    .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
+            watchlist.setMovie(movie);
+        } else if ("tv_series".equalsIgnoreCase(request.getType())) {
+            TVSerie tvSeries = tvSerieRepository.findById(request.getMediaId())
+                    .orElseThrow(() -> new AppException(ErrorCode.TV_SERIES_NOT_FOUND));
+            watchlist.setTvSerie(tvSeries);
+        } else {
+            throw new AppException(ErrorCode.INVALID_MEDIA_TYPE);
+        }
+
+        userWatchlistRepository.save(watchlist);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    public List<MediaDTO> getLikedMedia(String userId) {
+        UserInfo user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        List<UserLike> likedItems = userLikeRepository.findByUser(user);
+        return likedItems.stream()
+                .map(mediaMapper::toMediaDTO)
+                .toList();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    public List<MediaDTO> getWatchlistMedia(String userId) {
+        UserInfo user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        List<UserWatchList> watchlistItems = userWatchlistRepository.findByUser(user);
+        return watchlistItems.stream()
+                .map(mediaMapper::toMediaDTO)
+                .toList();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    public boolean isMediaLiked(String userId, Long mediaId) {
+        UserInfo user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Movie movie = movieRepository.findById(mediaId).orElse(null);
+        TVSerie serie = tvSerieRepository.findById(mediaId).orElse(null);
+        if (movie != null) {
+            return userLikeRepository.existsByUserAndMovie(user, movie);
+        } 
+        return userLikeRepository.existsByUserAndTvSerie(user, serie);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    public boolean isMediaInWatchlist(String userId, Long mediaId) {
+        UserInfo user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Movie movie = movieRepository.findById(mediaId).orElse(null);
+        TVSerie serie = tvSerieRepository.findById(mediaId).orElse(null);
+        if (movie != null) {
+            return userWatchlistRepository.existsByUserAndMovie(user, movie);
+        }
+        return userWatchlistRepository.existsByUserAndTvSerie(user, serie);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    public void removeFromWatchlist(String userId, Long mediaId) {
+        UserInfo user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Movie movie = movieRepository.findById(mediaId).orElse(null);
+        TVSerie serie = tvSerieRepository.findById(mediaId).orElse(null);
+        if (movie != null) {
+            userWatchlistRepository.deleteByUserAndMovie(user, movie);
+        } else {
+            userWatchlistRepository.deleteByUserAndTvSerie(user, serie);
+        }
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    public void unlikeMedia(String userId, Long mediaId) {
+        UserInfo user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Movie movie = movieRepository.findById(mediaId).orElse(null);
+        TVSerie serie = tvSerieRepository.findById(mediaId).orElse(null);
+        if (movie != null) {
+            userLikeRepository.deleteByUserAndMovie(user, movie);
+            movieRepository.decrementVoteCount(mediaId);
+        } else {
+            userLikeRepository.deleteByUserAndTvSerie(user, serie);
+            tvSerieRepository.decrementVoteCount(mediaId);
+        }
     }
 
     private Integer otpGenerator() {

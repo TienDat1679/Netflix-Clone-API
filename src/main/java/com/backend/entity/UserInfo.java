@@ -1,6 +1,7 @@
 package com.backend.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -34,33 +35,22 @@ public class UserInfo {
 	String password;
 	@Column(unique = true)
 	String email;
-<<<<<<< .mine
-	@ElementCollection(fetch = FetchType.EAGER)
-	Set<String> roles; // Ð?i t? String thành Set<String>
-=======
-
-
->>>>>>> .theirs
 	Integer otp;
 	int enabled;
-<<<<<<< .mine
-
-	LocalDateTime startDate; // Ngày b?t d?u VIP
-	LocalDateTime endDate;
-
-=======
 	LocalDate dob;
+
+	LocalDateTime startDate;
+	LocalDateTime endDate;
 
 	@ManyToMany
 	Set<Role> roles;
->>>>>>> .theirs
-	
+
 	@OneToOne
 	ForgotPassword forgotpassword;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<UserLike> likedItems;
+	List<UserLike> likedItems;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<UserWatchList> watchlistItems;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	List<UserWatchList> watchlistItems;
 }

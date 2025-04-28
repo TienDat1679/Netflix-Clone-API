@@ -1,5 +1,7 @@
 package com.backend.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -110,7 +112,7 @@ public class UserService {
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
-        UserInfo user = userRepository.findByEmail(email)
+        UserInfo user = userRepository.findByEmail("admin@netflix.com")
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         return userMapper.toUserResponse(user);
     }
@@ -276,4 +278,14 @@ public class UserService {
         Random random = new Random();
         return random.nextInt(100_000, 999_999);
     }
+    public void updateDate(String email, LocalDateTime startDate, LocalDateTime endDate) {
+        UserInfo user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        user.setStartDate(startDate);
+        user.setEndDate(endDate);
+
+        userRepository.save(user);
+    }
+
 }

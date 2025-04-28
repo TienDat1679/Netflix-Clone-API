@@ -1,6 +1,7 @@
 package com.backend.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -38,15 +39,18 @@ public class UserInfo {
 	int enabled;
 	LocalDate dob;
 
+	LocalDateTime startDate;
+	LocalDateTime endDate;
+
 	@ManyToMany
 	Set<Role> roles;
-	
+
 	@OneToOne
 	ForgotPassword forgotpassword;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<UserLike> likedItems;
+	List<UserLike> likedItems;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<UserWatchList> watchlistItems;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	List<UserWatchList> watchlistItems;
 }

@@ -2,7 +2,11 @@ package com.backend.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.backend.dto.request.CreateCommentRequest;
@@ -54,11 +58,12 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public List<CommentResponse> getCommentsByMediaId(Long mediaId) {
-        var comments = commentRepository.findByMediaId(mediaId);
-        return comments.stream()
+    public List<CommentResponse> getCommentsByMediaId(Long mediaId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Comment> commentPage = commentRepository.findByMediaIdOrderByLikesDescCreatedAtDesc(mediaId, pageable);
+        return commentPage.stream()
                 .map(commentMapper::toCommentResponse)
-                .toList();
+                .collect(Collectors.toList());
     }
 
 }

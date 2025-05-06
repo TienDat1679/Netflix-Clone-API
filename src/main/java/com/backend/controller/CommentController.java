@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.dto.ApiResponse;
@@ -25,9 +26,13 @@ public class CommentController {
     CommentService commentService;
 
     @GetMapping("/{mediaId}")
-    ApiResponse<List<CommentResponse>> getCommentsByMediaId(@PathVariable Long mediaId) {
+    public ApiResponse<List<CommentResponse>> getCommentsByMediaId(
+            @PathVariable Long mediaId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
         return ApiResponse.<List<CommentResponse>>builder()
-                .result(commentService.getCommentsByMediaId(mediaId))
+                .result(commentService.getCommentsByMediaId(mediaId, page, size))
                 .build();
     }
 

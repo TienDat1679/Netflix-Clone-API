@@ -13,5 +13,6 @@ public class MediaDTO {
     private String overview;
     private String posterPath;
     private String backdropPath;
+    private String releaseDate; 
     private String type; // "movie" hoặc "tv_series"
 }

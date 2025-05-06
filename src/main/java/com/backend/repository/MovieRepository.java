@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import com.backend.entity.Trailer;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -39,4 +43,13 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g.id IN :genreIds AND m.id <> :id")
     List<Movie> findMoviesByGenreIds(@Param("genreIds") List<Long> genreIds, @Param("id") Long id);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE Movie m SET m.voteCount = m.voteCount + 1 WHERE m.id = :id")
+    void incrementVoteCount(@Param("id") Long id);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Movie m SET m.voteCount = m.voteCount - 1 WHERE m.id = :id")
+    void decrementVoteCount(@Param("id") Long id);
 }

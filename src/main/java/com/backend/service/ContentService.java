@@ -8,28 +8,24 @@ import com.backend.entity.TVSerie;
 import com.backend.repository.GenreRepository;
 import com.backend.repository.MovieRepository;
 import com.backend.repository.TVSerieRepository;
-import com.backend.util.MediaMapper;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class ContentService {
-
-    @Autowired
-    private GenreRepository genreRepository;
-
-    @Autowired
-    private MovieRepository movieRepository;
-
-    @Autowired
-    private TVSerieRepository tvSerieRepository;
+    GenreRepository genreRepository;
+    MovieRepository movieRepository;
+    TVSerieRepository tvSerieRepository;
+    MediaService mediaService;
 
     public List<MediaDTO> getSameMediaById(Long id) {
         List<Genre> genres;
@@ -44,15 +40,17 @@ public class ContentService {
         }
 
         // Lấy danh sách ID thể loại
-        List<Long> genreIds = genres.stream().map(Genre::getId).collect(Collectors.toList());
+        List<Long> genreIds = genres.stream()
+                .map(Genre::getId)
+                .collect(Collectors.toList());
 
         // Lấy danh sách Movie và TVSerie có cùng thể loại
         List<Movie> similarMovies = movieRepository.findMoviesByGenreIds(genreIds, id);
         List<TVSerie> similarSeries = tvSerieRepository.findTVSeriesByGenreIds(genreIds, id);
 
         List<MediaDTO> sameMedia = new ArrayList<>();
-        sameMedia.addAll(MediaMapper.toMediaDTOList(similarMovies));
-        sameMedia.addAll(MediaMapper.toMediaDTOListFromTvSeries(similarSeries));
+        sameMedia.addAll(mediaService.moviesToMediaDTOList(similarMovies));
+        sameMedia.addAll(mediaService.tvSeriesToMediaDTOList(similarSeries));
 
         // Trả về danh sách tổng hợp
         return sameMedia;

@@ -9,7 +9,6 @@ import java.util.List;
 
 @Service
 public class TrailerService {
-
     @Autowired
     private TrailerRepository trailerRepository;
 
@@ -18,5 +17,13 @@ public class TrailerService {
     }
     public List<Trailer> getTrailersMovie(Long movieId) {
         return trailerRepository.findByMovie_Id(movieId);
+    }
+
+    public List<Trailer> getTrailersByMediaId(Long mediaId) {
+        List<Trailer> trailers = trailerRepository.findByMovie_Id(mediaId);
+        if (trailers.isEmpty()) {
+            trailers = trailerRepository.findByTvSerie_Id(mediaId);
+        }
+        return trailers;
     }
 }

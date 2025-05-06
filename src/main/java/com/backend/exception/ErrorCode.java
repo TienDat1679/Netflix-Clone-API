@@ -32,6 +32,7 @@ public enum ErrorCode {
     PASSWORD_NOT_MATCH(1018, "Password not match", HttpStatus.BAD_REQUEST),
     INVALID_TOKEN(1019, "Invalid token", HttpStatus.UNAUTHORIZED),
     ROLE_NOT_FOUND(1020, "Role not found", HttpStatus.NOT_FOUND),
+    COMMENT_NOT_FOUND(1021, "Comment not found", HttpStatus.NOT_FOUND),
     ;
 
     int code;

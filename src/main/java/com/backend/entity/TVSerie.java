@@ -33,7 +33,7 @@ public class TVSerie {
     private boolean adult;
     private Long voteCount;
     private Long viewCount;
-
+    private int isPrenium;
 //    @JsonIgnore
     @OneToMany(mappedBy = "tvSerie")
     private List<Episode> episodes;

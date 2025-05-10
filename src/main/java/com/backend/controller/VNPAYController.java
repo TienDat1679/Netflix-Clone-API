@@ -58,10 +58,10 @@ public class VNPAYController {
         LocalDateTime currentEndDate = user.getEndDate();
         int months = 0;
         // Tính số tháng được cộng thêm
-        if(amount.equals("3000")) {
+        if(amount.equals("30000")) {
             months = 1;
         }
-        if(amount.equals("28000")) {
+        if(amount.equals("280000")) {
             months=12;
         }
         System.out.println(months);

@@ -36,6 +36,7 @@ public class Movie {
     private Long voteCount;
     private Long viewCount;
 
+    private int isPrenium;
 //    @JsonIgnore
     @OneToMany(mappedBy = "movie")
     private List<Trailer> trailers;

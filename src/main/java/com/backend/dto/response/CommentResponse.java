@@ -17,7 +17,9 @@ public class CommentResponse {
     Long id;
     String content;
     String userId;
+    String userName;
     Long likes;
     Long mediaId;
     LocalDateTime createdAt;
+    boolean likedByUser;
 }

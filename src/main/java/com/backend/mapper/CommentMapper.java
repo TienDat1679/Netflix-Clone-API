@@ -10,5 +10,6 @@ import com.backend.entity.Comment;
 public interface CommentMapper {
 
     @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "userName", source = "user.name")
     CommentResponse toCommentResponse(Comment comment);
 }

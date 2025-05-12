@@ -55,4 +55,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g.name IN :genreNames GROUP BY m.id HAVING COUNT(DISTINCT g.name) = :size")
     List<Movie> findMoviesByGenreNames(@Param("genreNames") List<String> genreNames, @Param("size") long size);
+
+    List<Movie> findByReleaseDate(String date);
 }

@@ -50,4 +50,6 @@ public interface TVSerieRepository extends JpaRepository<TVSerie, Long> {
 
     @Query("SELECT s FROM TVSerie s JOIN s.genres g WHERE g.name IN :genreNames GROUP BY s.id HAVING COUNT(DISTINCT g.name) = :size")
     List<TVSerie> findTVSeriesByGenreNames(@Param("genreNames") List<String> genreNames, @Param("size") long size);
+
+    List<TVSerie> findByFirstAirDate(String date);
 }

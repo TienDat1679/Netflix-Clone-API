@@ -20,7 +20,6 @@ public class SearchController {
 
     @GetMapping("")
     public ResponseEntity<?> getMoviesAndSeries(@RequestParam("key") String key){
-        System.out.println(key);
         Map<String, Object> results = searchService.searchByTitleOrName(key);
         return ResponseEntity.ok(results);
 

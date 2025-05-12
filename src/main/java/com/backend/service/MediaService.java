@@ -2,7 +2,6 @@ package com.backend.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -81,5 +80,14 @@ public class MediaService {
                 .collect(Collectors.toList());
     }
 
+    public List<MediaDTO> searchMediaByGenres(List<String> genreNames) {
+        List<Movie> movies = movieRepository.findMoviesByGenreNames(genreNames, genreNames.size());
+        List<TVSerie> tvSeries = tvSeriesRepository.findTVSeriesByGenreNames(genreNames, genreNames.size());
 
+        List<MediaDTO> results = new ArrayList<>();
+        results.addAll(moviesToMediaDTOList(movies));
+        results.addAll(tvSeriesToMediaDTOList(tvSeries));
+
+        return results;
+    }
 }

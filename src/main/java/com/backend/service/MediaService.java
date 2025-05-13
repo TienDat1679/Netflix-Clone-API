@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.backend.entity.Genre;
+import com.backend.repository.GenreRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.backend.dto.MediaDTO;
@@ -26,6 +29,8 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MediaService {
+
+    GenreRepository genreRepository;
     MovieRepository movieRepository;
     TVSerieRepository tvSeriesRepository;
     UserInfoRepository userRepository;
@@ -93,15 +98,34 @@ public class MediaService {
     }
 
     public List<MediaDTO> searchMedia(String keyword) {
+        // Tìm các bộ phim theo tiêu đề
         List<Movie> movies = movieRepository.findByTitleContainingIgnoreCase(keyword);
+
+        // Tìm các TV series theo tên
         List<TVSerie> tvSeries = tvSeriesRepository.findByNameContainingIgnoreCase(keyword);
 
+        // Tìm các thể loại theo tên
+        List<Genre> genres = genreRepository.findByNameContainingIgnoreCase(keyword);
+
+        // Nếu có các thể loại, tìm tất cả các bộ phim và series thuộc các thể loại này
+        if (!genres.isEmpty()) {
+            for (Genre genre : genres) {
+                // Lấy tất cả các bộ phim thuộc thể loại
+                movies.addAll(genre.getMovies());
+
+                // Lấy tất cả các TV series thuộc thể loại
+                tvSeries.addAll(genre.getSeries());
+            }
+        }
+
+        // Chuyển các đối tượng Movie và TVSeries thành MediaDTO và trả về kết quả
         List<MediaDTO> results = new ArrayList<>();
         results.addAll(moviesToMediaDTOList(movies));
         results.addAll(tvSeriesToMediaDTOList(tvSeries));
 
         return results;
     }
+
 
     public List<MediaDTO> moviesToMediaDTOList(List<Movie> movies) {
         return movies.stream()

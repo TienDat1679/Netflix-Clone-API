@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +27,6 @@ public class PlaybackProgressController {
     private UserService userService;
 
 
-
-
     @GetMapping("")
     public PlaybackProgress getProgress(
             @RequestParam("mediaId") Long mediaId) {
@@ -37,7 +36,20 @@ public class PlaybackProgressController {
         // Gọi service để lấy PlaybackProgress và trả về
         return playbackProgressService.getProgress(userId, mediaId);
     }
+    @GetMapping("/user")
+    public ResponseEntity<?> getPlaybackProgressByUserId() {
+        UserResponse user = userService.getMyInfo();
+        String userId = user.getId();
+        List<PlaybackProgress> playbackProgressList = playbackProgressService.getProgressByUserId(userId);
 
+        if (playbackProgressList != null && !playbackProgressList.isEmpty()) {
+            System.out.println(playbackProgressList);
+            return ResponseEntity.ok(playbackProgressList);
+        } else {
+            // Trả về ResponseEntity với mã trạng thái HTTP 404 (Not Found) nếu không tìm thấy tiến trình
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No playback progress found for user.");
+        }
+    }
 
     @PostMapping("/save")
     public ResponseEntity<String> saveProgress(  @RequestParam("mediaId") Long mediaId,

@@ -9,6 +9,8 @@ import com.backend.repository.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PlaybackProgressService {
 
@@ -32,6 +34,12 @@ public class PlaybackProgressService {
         return progress;  // Nếu progress là null, sẽ trả về null.
     }
 
+    public List<PlaybackProgress> getProgressByUserId(String userId) {
+
+        List<PlaybackProgress> progressList = null;
+        progressList = playbackProgressRepository.findByUserId(userId);
+        return progressList;
+    }
 
     public void saveOrUpdateProgress(String userId, Long media, Long position) {
 

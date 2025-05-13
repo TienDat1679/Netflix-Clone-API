@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -40,17 +41,9 @@ public class VNPAYController {
     }
 
     @GetMapping("/vn-pay-callback")
-    public ResponseObject<PaymentDTO.VNPayResponse> payCallbackHandler(HttpServletRequest request) {
-        String status = request.getParameter("vnp_ResponseCode");
-        if (status.equals("00")) {
-            updateUser(request.getParameter("vnp_Amount"));
-            return new ResponseObject<>(HttpStatus.OK, "Success", new PaymentDTO.VNPayResponse("00", "Success", ""));
-        } else {
-            return new ResponseObject<>(HttpStatus.BAD_REQUEST, "Failed", null);
-        }
+    public void callback(@RequestParam("amount") String amount) {
+            updateUser(amount);
     }
-
-
 
     private void updateUser(String amount) {
         UserResponse user=userService.getMyInfo();
@@ -58,13 +51,12 @@ public class VNPAYController {
         LocalDateTime currentEndDate = user.getEndDate();
         int months = 0;
         // Tính số tháng được cộng thêm
-        if(amount.equals("30000")) {
+        if(amount.equals("3000000")) {
             months = 1;
         }
-        if(amount.equals("280000")) {
+        if(amount.equals("28000000")) {
             months=12;
         }
-        System.out.println(months);
         LocalDateTime newStartDate;
         LocalDateTime newEndDate;
 
@@ -72,8 +64,6 @@ public class VNPAYController {
             // Nếu chưa có hoặc đã hết hạn, tính từ ngày hiện tại
             newStartDate = LocalDateTime.now();
             newEndDate = newStartDate.plusMonths(months);
-            System.out.println(newStartDate);
-            System.out.println(newEndDate);
         } else {
             // Nếu còn hạn, cộng thêm thời gian vào ngày hết hạn hiện tại
             newStartDate = currentStartDate;

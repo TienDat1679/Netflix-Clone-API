@@ -2,6 +2,7 @@ package com.backend.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,10 +32,25 @@ public class MediaReminderController {
                 .build();
     }
 
+    @DeleteMapping("/{mediaId}")
+    ApiResponse<Void> deleteReminder(@PathVariable Long mediaId) {
+        mediaReminderService.deleteReminder(mediaId);
+        return ApiResponse.<Void>builder()
+                .message("Delete reminder successfully")
+                .build();
+    }
+
     @GetMapping
     ApiResponse<List<MediaDTO>> getUserInbox() {
         return ApiResponse.<List<MediaDTO>>builder()
                 .result(mediaReminderService.getUserInbox())
+                .build();
+    }
+
+    @GetMapping("/by-user")
+    ApiResponse<List<MediaDTO>> getAllReminders() {
+        return ApiResponse.<List<MediaDTO>>builder()
+                .result(mediaReminderService.getMediaReminders())
                 .build();
     }
 }

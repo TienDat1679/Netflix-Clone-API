@@ -52,4 +52,8 @@ public interface TVSerieRepository extends JpaRepository<TVSerie, Long> {
     List<TVSerie> findTVSeriesByGenreNames(@Param("genreNames") List<String> genreNames, @Param("size") long size);
 
     List<TVSerie> findByFirstAirDate(String date);
+
+    @Query("SELECT s FROM TVSerie s WHERE s.firstAirDate >= :startDate AND s.firstAirDate <= :endDate")
+    List<TVSerie> findTvSeriesReleasingBetween(@Param("startDate") String startDate, @Param("endDate") String endDate);
+
 }

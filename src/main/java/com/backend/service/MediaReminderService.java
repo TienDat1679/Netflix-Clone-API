@@ -37,7 +37,7 @@ public class MediaReminderService {
     UserInfoRepository userRepository;
     MediaMapper mediaMapper;
 
-    @Scheduled(cron = "0 14 19 * * *", zone = "Asia/Ho_Chi_Minh") // chạy lúc 9h sáng mỗi ngày
+    @Scheduled(cron = "0 55 11 * * *", zone = "Asia/Ho_Chi_Minh")
     public void sendEmailReminders() {
         String today = LocalDate.now().toString(); // yyyy-MM-dd
 
@@ -75,10 +75,37 @@ public class MediaReminderService {
         reminderRepository.save(reminder);
     }
 
+    public void deleteReminder(Long mediaId) {
+        var user = userRepository.findByEmail(UserUtil.getUserEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        var reminder = reminderRepository.findByMediaIdAndUserId(mediaId, user.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.REMINDER_NOT_FOUND));
+        reminderRepository.delete(reminder);
+    }
+
     public List<MediaDTO> getUserInbox() {
         var user = userRepository.findByEmail(UserUtil.getUserEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         List<MediaReminder> reminders = reminderRepository.findByUserIdAndNotifiedTrue(user.getId());
+        List<MediaDTO> mediaList = new ArrayList<>();
+        for (MediaReminder reminder : reminders) {
+            Movie movie = movieRepository.findById(reminder.getMediaId()).orElse(null);
+            TVSerie serie = serieRepository.findById(reminder.getMediaId()).orElse(null);
+            MediaDTO media = null;
+            if (movie != null) {
+                media = mediaMapper.toMediaDTO(movie);
+            } else if (serie != null) {
+                media = mediaMapper.toMediaDTO(serie);
+            }
+            mediaList.add(media);
+        }
+        return mediaList;
+    }
+
+    public List<MediaDTO> getMediaReminders() {
+        var user = userRepository.findByEmail(UserUtil.getUserEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        List<MediaReminder> reminders = reminderRepository.findByUserId(user.getId());
         List<MediaDTO> mediaList = new ArrayList<>();
         for (MediaReminder reminder : reminders) {
             Movie movie = movieRepository.findById(reminder.getMediaId()).orElse(null);

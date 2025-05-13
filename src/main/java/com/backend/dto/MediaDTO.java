@@ -15,4 +15,5 @@ public class MediaDTO {
     private String backdropPath;
     private String releaseDate; 
     private String type; // "movie" hoặc "tv_series"
+    private boolean isRemind;
 }

@@ -55,6 +55,11 @@ public class MediaController {
         return mediaService.getTrendingMedia();
     }
 
+    @GetMapping("/coming-soon")
+    public List<MediaDTO> getComingSoonMedia() {
+        return mediaService.getComingSoonMedia();
+    }
+
     @GetMapping("/search-by-genres")
     ApiResponse<List<MediaDTO>> searchMediaByGenres(@RequestParam List<String> genres) {
         List<MediaDTO> media = mediaService.searchMediaByGenres(genres);

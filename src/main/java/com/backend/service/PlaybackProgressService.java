@@ -59,6 +59,10 @@ public class PlaybackProgressService {
             playbackProgressRepository.save(newProgress);
         }
     }
+    public void deleteProgress(String userId, Long mediaId) {
+        PlaybackProgress progress = playbackProgressRepository.findByUserIdAndMediaId(userId, mediaId);
+        playbackProgressRepository.delete(progress);
+    }
 
 }
 

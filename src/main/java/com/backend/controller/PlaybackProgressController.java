@@ -33,7 +33,8 @@ public class PlaybackProgressController {
         // Lấy thông tin người dùng
         UserResponse user = userService.getMyInfo();
         String userId = user.getId();
-        // Gọi service để lấy PlaybackProgress và trả về
+        System.out.println(mediaId);
+       System.out.println(playbackProgressService.getProgress(userId, mediaId));
         return playbackProgressService.getProgress(userId, mediaId);
     }
     @GetMapping("/user")
@@ -43,7 +44,6 @@ public class PlaybackProgressController {
         List<PlaybackProgress> playbackProgressList = playbackProgressService.getProgressByUserId(userId);
 
         if (playbackProgressList != null && !playbackProgressList.isEmpty()) {
-            System.out.println(playbackProgressList);
             return ResponseEntity.ok(playbackProgressList);
         } else {
             // Trả về ResponseEntity với mã trạng thái HTTP 404 (Not Found) nếu không tìm thấy tiến trình
@@ -59,5 +59,13 @@ public class PlaybackProgressController {
         System.out.println(userId);
         playbackProgressService.saveOrUpdateProgress(userId,mediaId,Positon);
         return ResponseEntity.ok("Progress saved successfully!");
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteProgress(  @RequestParam("mediaId") Long mediaId) {
+        UserResponse user = userService.getMyInfo();
+        String userId = user.getId();
+        playbackProgressService.deleteProgress(userId,mediaId);
+        return ResponseEntity.ok("Progress delete successfully!");
     }
 }

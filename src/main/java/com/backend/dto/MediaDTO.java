@@ -16,4 +16,5 @@ public class MediaDTO {
     private String releaseDate; 
     private String type; // "movie" hoặc "tv_series"
     private boolean isRemind;
+    private int isPrenium;
 }

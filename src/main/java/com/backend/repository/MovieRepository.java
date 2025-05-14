@@ -53,4 +53,12 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query("UPDATE Movie m SET m.voteCount = COALESCE(m.voteCount, 0) - 1 WHERE m.id = :id")
     void decrementVoteCount(@Param("id") Long id);
 
+    @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g.name IN :genreNames GROUP BY m.id HAVING COUNT(DISTINCT g.name) = :size")
+    List<Movie> findMoviesByGenreNames(@Param("genreNames") List<String> genreNames, @Param("size") long size);
+
+    List<Movie> findByReleaseDate(String date);
+
+    @Query("SELECT m FROM Movie m WHERE m.releaseDate >= :startDate AND m.releaseDate <= :endDate")
+    List<Movie> findMoviesReleasingBetween(@Param("startDate") String startDate, @Param("endDate") String endDate);
+    
 }

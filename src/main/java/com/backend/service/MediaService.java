@@ -1,8 +1,9 @@
 package com.backend.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.backend.entity.Genre;
@@ -14,8 +15,11 @@ import com.backend.dto.MediaDTO;
 import com.backend.entity.Movie;
 import com.backend.entity.TVSerie;
 import com.backend.mapper.MediaMapper;
+import com.backend.repository.MediaReminderRepository;
 import com.backend.repository.MovieRepository;
 import com.backend.repository.TVSerieRepository;
+import com.backend.repository.UserInfoRepository;
+import com.backend.utils.UserUtil;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +33,9 @@ public class MediaService {
     GenreRepository genreRepository;
     MovieRepository movieRepository;
     TVSerieRepository tvSeriesRepository;
+    UserInfoRepository userRepository;
     MediaMapper mediaMapper;
+    MediaReminderRepository reminderRepository;
 
     public List<MediaDTO> getTrendingMedia() {
         List<Movie> movies = movieRepository.findTop5ByOrderByViewCountDesc();
@@ -38,6 +44,34 @@ public class MediaService {
         List<MediaDTO> results = new ArrayList<>();
         results.addAll(moviesToMediaDTOList(movies));
         results.addAll(tvSeriesToMediaDTOList(tvSeries));
+
+        return results;
+    }
+
+    public List<MediaDTO> getComingSoonMedia() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate today = LocalDate.now();
+        LocalDate in30Days = today.plusDays(30);
+
+        String startDate = today.format(formatter);
+        String endDate = in30Days.format(formatter);
+
+        List<Movie> movies = movieRepository.findMoviesReleasingBetween(startDate, endDate);
+        List<TVSerie> tvSeries = tvSeriesRepository.findTvSeriesReleasingBetween(startDate, endDate);
+
+        List<MediaDTO> results = new ArrayList<>();
+        results.addAll(moviesToMediaDTOList(movies));
+        results.addAll(tvSeriesToMediaDTOList(tvSeries));
+
+        var user = userRepository.findByEmail(UserUtil.getUserEmail()).orElse(null);
+
+        if (user != null) {
+            for (MediaDTO media : results) {
+                if (reminderRepository.existsByUserIdAndMediaId(user.getId(), media.getId())) {
+                    media.setRemind(true);
+                }
+            }
+        }
 
         return results;
     }
@@ -105,5 +139,14 @@ public class MediaService {
                 .collect(Collectors.toList());
     }
 
+    public List<MediaDTO> searchMediaByGenres(List<String> genreNames) {
+        List<Movie> movies = movieRepository.findMoviesByGenreNames(genreNames, genreNames.size());
+        List<TVSerie> tvSeries = tvSeriesRepository.findTVSeriesByGenreNames(genreNames, genreNames.size());
 
+        List<MediaDTO> results = new ArrayList<>();
+        results.addAll(moviesToMediaDTOList(movies));
+        results.addAll(tvSeriesToMediaDTOList(tvSeries));
+
+        return results;
+    }
 }

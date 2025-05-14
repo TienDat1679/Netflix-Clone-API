@@ -1,8 +1,6 @@
 package com.backend.controller;
 
 import java.util.List;
-import java.util.Optional;
-
 import com.backend.service.ContentService;
 import com.backend.service.MediaService;
 
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.dto.ApiResponse;
 import com.backend.dto.MediaDTO;
 
 import lombok.AccessLevel;
@@ -30,8 +29,6 @@ public class MediaController {
     public List<MediaDTO> searchMedia(@RequestParam("keyword") String keyword) {
         return mediaService.searchMedia(keyword);
     }
-
-
 
     @GetMapping("/series/top10")
     public List<MediaDTO> getTop10Series() {
@@ -53,9 +50,21 @@ public class MediaController {
         return contentService.getSameMediaById(id);
     }
 
-
     @GetMapping("/trending")
     public List<MediaDTO> getTrendingMedia() {
         return mediaService.getTrendingMedia();
+    }
+
+    @GetMapping("/coming-soon")
+    public List<MediaDTO> getComingSoonMedia() {
+        return mediaService.getComingSoonMedia();
+    }
+
+    @GetMapping("/search-by-genres")
+    ApiResponse<List<MediaDTO>> searchMediaByGenres(@RequestParam List<String> genres) {
+        List<MediaDTO> media = mediaService.searchMediaByGenres(genres);
+        return ApiResponse.<List<MediaDTO>>builder()
+                .result(media)
+                .build();
     }
 }

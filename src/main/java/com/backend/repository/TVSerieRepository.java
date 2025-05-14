@@ -47,4 +47,13 @@ public interface TVSerieRepository extends JpaRepository<TVSerie, Long> {
     @Modifying
     @Query("UPDATE TVSerie t SET t.voteCount = t.voteCount - 1 WHERE t.id = :id")
     void decrementVoteCount(@Param("id") Long id);
+
+    @Query("SELECT s FROM TVSerie s JOIN s.genres g WHERE g.name IN :genreNames GROUP BY s.id HAVING COUNT(DISTINCT g.name) = :size")
+    List<TVSerie> findTVSeriesByGenreNames(@Param("genreNames") List<String> genreNames, @Param("size") long size);
+
+    List<TVSerie> findByFirstAirDate(String date);
+
+    @Query("SELECT s FROM TVSerie s WHERE s.firstAirDate >= :startDate AND s.firstAirDate <= :endDate")
+    List<TVSerie> findTvSeriesReleasingBetween(@Param("startDate") String startDate, @Param("endDate") String endDate);
+
 }

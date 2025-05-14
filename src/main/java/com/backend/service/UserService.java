@@ -68,6 +68,8 @@ public class UserService {
         var roles = List.of(role);
         user.setRoles(new HashSet<>(roles));
 
+        user.setImage("avatar_4");
+
         int otp = otpGenerator();
         MailBody mailBody = MailBody.builder()
                 .to(request.getEmail())
@@ -100,10 +102,10 @@ public class UserService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         
         userMapper.updateUser(user, request);
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        //user.setPassword(passwordEncoder.encode(request.getPassword()));
         
-        var roles = roleRepository.findAllById(request.getRoles());
-        user.setRoles(new HashSet<>(roles));
+        //var roles = roleRepository.findAllById(request.getRoles());
+        //user.setRoles(new HashSet<>(roles));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }

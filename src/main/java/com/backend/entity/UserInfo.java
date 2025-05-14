@@ -37,6 +37,7 @@ public class UserInfo {
 	String email;
 	Integer otp;
 	int enabled;
+	String image;
 	LocalDate dob;
 
 	LocalDateTime startDate;

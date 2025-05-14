@@ -26,4 +26,5 @@ public class UserResponse {
 	Set<RoleResponse> roles;
 	LocalDateTime startDate;
 	LocalDateTime endDate;
+	String image;
 }

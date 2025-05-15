@@ -1,0 +1,40 @@
+package com.backend.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.backend.dto.request.PermissionRequest;
+import com.backend.dto.response.PermissionResponse;
+import com.backend.entity.Permission;
+import com.backend.mapper.PermissionMapper;
+import com.backend.repository.PermissionRepository;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
+@Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class PermissionService {
+    PermissionRepository permissionRepository;
+    PermissionMapper permissionMapper;
+
+    public PermissionResponse create(PermissionRequest request) {
+        Permission permission = permissionMapper.toPermission(request);
+        permission = permissionRepository.save(permission);
+        return permissionMapper.toPermissionResponse(permission);
+    }
+
+    public List<PermissionResponse> getAll() {
+        var permissions = permissionRepository.findAll();
+        return permissions.stream()
+                .map(permissionMapper::toPermissionResponse)
+                .toList();
+    }
+
+    public void delete(String permission) {
+        permissionRepository.deleteById(permission);
+    }
+}

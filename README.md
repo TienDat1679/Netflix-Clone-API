@@ -1,5 +1,6 @@
 # 🎬 Movie & TV Series App
 
+Đây là phần backend của ứng dụng xem phim và gợi ý phim giống Netflix. Ứng dụng cung cấp API cho các chức năng như tìm kiếm phim, lưu danh sách yêu thích, lưu tiến độ xem, bình luận, và gợi ý phim dựa trên hành vi người dùng.
 Ứng dụng xem phim và gợi ý phim sử dụng Spring Boot, MySQL
 ## 📌 Tính năng chính
 
@@ -39,3 +40,14 @@ GRANT ALL PRIVILEGES ON netflix-clone-local.* TO 'root'@'localhost';
 
 -- Giải nén file database.7z
 -- Import dữ liệu trong file vào cơ sở dữ liệu mysql vừa tạo ở trên
+
+**Thêm phần liên hệ / đóng góp / license**
+
+```markdown
+## 🤝 Đóng góp
+
+Chúng tôi luôn chào đón các đóng góp để hoàn thiện dự án hơn. Hãy fork repo, tạo nhánh mới và gửi pull request!
+
+## 📜 License
+
+Dự án được phát triển cho mục đích học tập, phi thương mại.
